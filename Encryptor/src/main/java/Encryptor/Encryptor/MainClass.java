@@ -45,7 +45,7 @@ public class MainClass
     	System.out.println("enter file path:");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
-    	while(flag){
+    	while(!flag){
     		System.out.println("the path either not leads to a file or not exists.\nenter new path:");
     		userInput = reader.nextLine();
     		inputFile = new File(userInput);
