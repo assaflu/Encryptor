@@ -49,6 +49,7 @@ public class MainClass
     		System.out.println("the path either not leads to a file or not exists.\nenter new path:");
     		userInput = reader.nextLine();
     		inputFile = new File(userInput);
+    		System.out.println(inputFile.exists()+ " "+  inputFile.isFile());
     		flag = inputFile.exists() && inputFile.isFile();
     	}
     	Scanner fileReader = null;
