@@ -3,6 +3,7 @@ package Encryptor.Encryptor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -11,6 +12,19 @@ import java.util.Scanner;
  */
 public class MainClass 
 {
+	private int GenerateKey (int upperLimit){
+		Random rand = new Random();
+		return rand.nextInt(upperLimit);
+	}
+	
+	private static void CaesarDecryption(int Key, String filePath){
+		
+	}
+	
+	private static void CaesarEncryption(int Key, String filePath){
+		
+	}
+	
     public static void main( String[] args )
     {
     	Scanner reader = new Scanner (System.in);
@@ -41,15 +55,15 @@ public class MainClass
 			}
             
     	}
-    	flag = true;
     	System.out.println("enter file path:");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
+    	flag = inputFile.exists() && inputFile.isFile();
     	while(!flag){
     		System.out.println("the path either not leads to a file or not exists.\nenter new path:");
     		userInput = reader.nextLine();
     		inputFile = new File(userInput);
-    		System.out.println(inputFile.exists()+ " "+  inputFile.isFile());
+    		//System.out.println(inputFile.exists()+ " "+  inputFile.isFile());
     		flag = inputFile.exists() && inputFile.isFile();
     	}
     	Scanner fileReader = null;
