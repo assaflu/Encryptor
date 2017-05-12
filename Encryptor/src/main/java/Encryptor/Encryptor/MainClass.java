@@ -12,19 +12,17 @@ import java.util.Scanner;
  */
 public class MainClass 
 {
-	private int GenerateKey (int upperLimit){
+	private static int GenerateKey (int upperLimit){
 		Random rand = new Random();
-		return rand.nextInt(upperLimit);
+		int returnMe = rand.nextInt(upperLimit);
+		System.out.println(returnMe);
+		return returnMe;
 	}
 	
 	private static void CaesarDecryption(int Key, String filePath){
 		
 	}
-	
-	private static void CaesarEncryption(int Key, String filePath){
 		
-	}
-	
     public static void main( String[] args )
     {
     	Scanner reader = new Scanner (System.in);
@@ -65,17 +63,16 @@ public class MainClass
     		inputFile = new File(userInput);
     		//System.out.println(inputFile.exists()+ " "+  inputFile.isFile());
     		flag = inputFile.exists() && inputFile.isFile();
-    	}
-    	Scanner fileReader = null;
-    	try {
-			fileReader = new Scanner(inputFile);
-		} catch (FileNotFoundException e) {
+    	} 	
+        reader.close();
+        
+        try {
+			EncryptionAlgoritems.EncryptionAlgoritems.CaesarEncryption(GenerateKey(Byte.MAX_VALUE), userInput);
+			System.out.println("done");
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-
-        reader.close();
         
         
         
