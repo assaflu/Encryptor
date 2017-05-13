@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+import EncryptionAlgoritems.EncryptionAlgoritems;
+
 /**
  * Hello world!
  *
@@ -17,10 +19,6 @@ public class MainClass
 		int returnMe = rand.nextInt(upperLimit);
 		System.out.println(returnMe);
 		return returnMe;
-	}
-	
-	private static void CaesarDecryption(int Key, String filePath){
-		
 	}
 		
     public static void main( String[] args )
@@ -67,14 +65,22 @@ public class MainClass
         reader.close();
         
         try {
-			EncryptionAlgoritems.EncryptionAlgoritems.CaesarEncryption(GenerateKey(Byte.MAX_VALUE), userInput);
+        	int x = GenerateKey(Byte.MAX_VALUE);
+        	if(userInput.contains(".")){
+        		String[] ext  = userInput.split("\\.");
+        		for(String e : ext){
+        			System.out.println(e);
+        		}
+        	}
+        	System.out.println(userInput.contains("."));
+
+  			EncryptionAlgoritems.CaesarEncryption(x, userInput);
+  			//userInput = "C:\\Users\\assaflu\\Desktop\\LocationManagerNotSpart.txt.encrypted";
+			DecryptionAlgoritems.DecryptionAlgoritems.CaesarDecryption(x, userInput,"txt");
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-        
-        
-        
+		}        
     }
 }

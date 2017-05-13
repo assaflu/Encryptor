@@ -1,66 +1,61 @@
-package EncryptionAlgoritems;
+package DecryptionAlgoritems;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
+import java.security.AlgorithmConstraints;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
+import javax.xml.crypto.AlgorithmMethod;
+
+import EncryptionAlgoritems.EncryptionAlgoritems;
 
 @Retention(RetentionPolicy.RUNTIME)
-@interface EncryptionMethod {
+@interface DecryptionnMethod {
 	String name();
 	int serialNumber();
 }
 
-public class EncryptionAlgoritems {
-
+public class DecryptionAlgoritems {
 	private List<String> AlgoritemOptions;
-	public final static EncryptionAlgoritems instance = new EncryptionAlgoritems();
+	public final static DecryptionAlgoritems instance = new DecryptionAlgoritems();
 	
-	private EncryptionAlgoritems(){
+	private DecryptionAlgoritems(){
 		AlgoritemOptions = new ArrayList<>();
 		for(Method m : EncryptionAlgoritems.class.getMethods()){
-			if(m.isAnnotationPresent(EncryptionMethod.class)){
-				AlgoritemOptions.add(m.getAnnotation(EncryptionMethod.class).name());
-			}
+			if(m.isAnnotationPresent(DecryptionnMethod.class))
+				AlgoritemOptions.add(m.getAnnotation(DecryptionnMethod.class).name());
 		}
 	}
 	
-	@EncryptionMethod(name = "Caesar Encryption",serialNumber=1)
-	public static void CaesarEncryption(int key, String filePath) throws IOException{
+	@DecryptionnMethod(name = "Caesar Decryption", serialNumber = 1)
+	public static void CaesarDecryption(int key, String filePath,String extention) throws IOException{
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
 		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
 		while (fileinputstream.getChannel().position()<fileinputstream.getChannel().size()){
 			int read = fileinputstream.read();
-			read = read+key;
-			if(read>Byte.MAX_VALUE){
-				read=Byte.MIN_VALUE+read-(Byte.MAX_VALUE+1);
+			read = read-key;
+			if(read<Byte.MIN_VALUE){
+				read=Byte.MAX_VALUE+read-(Byte.MIN_VALUE+1);
 			}
 			encryptedFile[loopCounter] = (byte) read;
 			loopCounter++;
 		}
 		fileinputstream.close();
 		StringBuilder savePath = new StringBuilder(filePath);
-		savePath.append(".encrypted");
+		savePath.append("_decd."+extention);
 		FileOutputStream out = new FileOutputStream(savePath.toString());
 		out.write(encryptedFile);
 		out.close();
 	}
 	
-	public void printOptions (){
+	public void printOptions (int startingNumber){
 		for(String e : AlgoritemOptions)
 			System.out.println(e);
-		
-		
 	}
 }
