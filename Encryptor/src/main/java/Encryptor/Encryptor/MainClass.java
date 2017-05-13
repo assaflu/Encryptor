@@ -57,6 +57,8 @@ public class MainClass
 			}
             
     	}
+    	
+    	/*
     	System.out.println("enter file path:");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
@@ -68,24 +70,20 @@ public class MainClass
     		flag = inputFile.exists() && inputFile.isFile();
     	} 	
         reader.close();
-        
-        try {
-        	int x = GenerateKey(Byte.MAX_VALUE);
-        	if(userInput.contains(".")){
-        		String[] ext  = userInput.split("\\.");
-        		for(String e : ext){
-        			System.out.println(e);
-        		}
-        	}
-        	System.out.println(userInput.contains("."));
-
-  			EncryptionAlgoritems.CaesarEncryption(x, userInput);
-  			//userInput = "C:\\Users\\assaflu\\Desktop\\LocationManagerNotSpart.txt.encrypted";
-			DecryptionAlgoritems.CaesarDecryption(x, userInput,"txt");
-			System.out.println("done");
+        int x = GenerateKey(Byte.MAX_VALUE);
+  		try {
+			EncryptionAlgoritems.caesarEncryption(x, userInput);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} */       
-    }
+		}
+  		//userInput = "C:\\Users\\assaflu\\Desktop\\LocationManagerNotSpart.txt.encrypted";
+		try {
+			DecryptionAlgoritems.caesarDecryption(x, userInput,"txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("done");       
+    */}
 }

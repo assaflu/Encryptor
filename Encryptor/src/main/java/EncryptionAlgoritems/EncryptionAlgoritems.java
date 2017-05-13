@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import Encryptor.Encryptor.AlgoritemManaging;
+
 
 @Retention(RetentionPolicy.RUNTIME)
 @interface EncryptionMethod {
@@ -21,14 +23,14 @@ import java.util.Scanner;
 	int serialNumber();
 }
 
-public class EncryptionAlgoritems {
+public class EncryptionAlgoritems extends AlgoritemManaging {
 
-	private List<String> AlgoritemOptions;
+	private int choosenMethod;
 	public final static EncryptionAlgoritems instance = new EncryptionAlgoritems();
 	
 	private EncryptionAlgoritems(){
-		AlgoritemOptions = new ArrayList<>();
-		for(Method m : EncryptionAlgoritems.class.getMethods()){
+		choosenMethod=0;
+		for(Method m : EncryptionAlgoritems.class.getDeclaredMethods()){
 			if(m.isAnnotationPresent(EncryptionMethod.class)){
 				AlgoritemOptions.add(m.getAnnotation(EncryptionMethod.class).serialNumber()+". "+
 					m.getAnnotation(EncryptionMethod.class).name());
@@ -37,7 +39,7 @@ public class EncryptionAlgoritems {
 	}
 	
 	@EncryptionMethod(name = "Caesar Encryption",serialNumber=1)
-	public static void caesarEncryption(int key, String filePath) throws IOException{
+	private static void caesarEncryption(int key, String filePath) throws IOException{
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
 		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
@@ -56,30 +58,5 @@ public class EncryptionAlgoritems {
 		FileOutputStream out = new FileOutputStream(savePath.toString());
 		out.write(encryptedFile);
 		out.close();
-	}
-	
-	public void printOptions (){
-		for(String e : AlgoritemOptions)
-			System.out.println(e);
-	}
-	
-	public void chooseAlgoritem(){
-		System.out.println();
-		System.out.println("choose your encryption algoritem:");
-    	Scanner reader = new Scanner (System.in);
-    	String userInput;
-    	boolean correctInput = false;
-    	while(!correctInput){            	
-        	userInput = reader.nextLine();
-        	try{
-        		correctInput = Integer.parseInt(userInput)<=AlgoritemOptions.size() && Integer.parseInt(userInput)>0;
-        		if(!correctInput) System.out.println("index out of range, enter again");
-        	}
-        	catch(NumberFormatException e){
-        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
-        		correctInput=false;
-        	}
-    	}
-    	reader.close();
 	}
 }
