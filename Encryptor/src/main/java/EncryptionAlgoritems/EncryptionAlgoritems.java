@@ -1,20 +1,14 @@
 package EncryptionAlgoritems;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 import Encryptor.Encryptor.AlgoritemManaging;
+import Encryptor.Encryptor.NotAllowedException;
 
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -37,7 +31,10 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 	}
 	
 	@EncryptionMethod(name = "Caesar Encryption",serialNumber=1)
-	private static void caesarEncryption(int key, String filePath) throws IOException{
+	public static void caesarEncryption(DecEncAthorization athorization,int key, String filePath) throws IOException, NotAllowedException{
+		if(athorization == null){
+			throw new NotAllowedException();
+		}
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
 		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];

@@ -6,15 +6,8 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
-import java.security.AlgorithmConstraints;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import javax.xml.crypto.AlgorithmMethod;
-
-import EncryptionAlgoritems.EncryptionAlgoritems;
 import Encryptor.Encryptor.AlgoritemManaging;
+import Encryptor.Encryptor.NotAllowedException;
 
 @Retention(RetentionPolicy.RUNTIME)
 @interface DecryptionnMethod {
@@ -35,7 +28,10 @@ public class DecryptionAlgoritems extends AlgoritemManaging {
 	}
 	
 	@DecryptionnMethod(name = "Caesar Decryption", serialNumber = 1)
-	private static void caesarDecryption(int key, String filePath,String extention) throws IOException{
+	public static void caesarDecryption(DecEncAthorization athorization,int key, String filePath) throws IOException, NotAllowedException{
+		if(athorization == null){
+			throw new NotAllowedException();
+		}
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
 		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
@@ -50,7 +46,7 @@ public class DecryptionAlgoritems extends AlgoritemManaging {
 		}
 		fileinputstream.close();
 		StringBuilder savePath = new StringBuilder(filePath);
-		savePath.append("_decd."+extention);
+		//savePath.append("_decd."+extention);
 		FileOutputStream out = new FileOutputStream(savePath.toString());
 		out.write(encryptedFile);
 		out.close();

@@ -19,10 +19,17 @@ public class MainClass
 	private static int GenerateKey (int upperLimit){
 		Random rand = new Random();
 		int returnMe = rand.nextInt(upperLimit);
-		System.out.println(returnMe);
+		System.out.println("key is: "+returnMe);
 		return returnMe;
 	}
-		
+	
+	private static void execute(int key, String filePath){
+		if(EncryptionAlgoritems.instance.getChosenMethod()!=0)
+			EncryptionAlgoritems.instance.executeMethod(key, filePath);
+		else if(DecryptionAlgoritems.instance.getChosenMethod()!=0)
+			DecryptionAlgoritems.instance.executeMethod(key,filePath);
+	}
+	
     public static void main( String[] args )
     {
     	Scanner reader = new Scanner (System.in);
@@ -58,8 +65,7 @@ public class MainClass
             
     	}
     	
-    	/*
-    	System.out.println("enter file path:");
+    	System.out.println("enter file path: ");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
     	flag = inputFile.exists() && inputFile.isFile();
@@ -70,20 +76,8 @@ public class MainClass
     		flag = inputFile.exists() && inputFile.isFile();
     	} 	
         reader.close();
-        int x = GenerateKey(Byte.MAX_VALUE);
-  		try {
-			EncryptionAlgoritems.caesarEncryption(x, userInput);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-  		//userInput = "C:\\Users\\assaflu\\Desktop\\LocationManagerNotSpart.txt.encrypted";
-		try {
-			DecryptionAlgoritems.caesarDecryption(x, userInput,"txt");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        int key = GenerateKey(Byte.MAX_VALUE);
+        execute(key, userInput);
 		System.out.println("done");       
-    */}
+    }
 }
