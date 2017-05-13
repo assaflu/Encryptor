@@ -1,27 +1,38 @@
 package Encryptor.Encryptor;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class AlgoritemManaging {
 
-	protected List<String> AlgoritemOptions;
+	protected Map<Integer, String> AlgoritemOptions;
+	protected Map<Integer, Method> ExecutableMethods;
+	protected int choosenMethod;
 	
 	protected AlgoritemManaging(){
-		AlgoritemOptions = new ArrayList<>();
+		choosenMethod=0;
+		AlgoritemOptions = new HashMap<>();
+		ExecutableMethods = new HashMap<>();
 	}
 	
 	public void printOptions (){
-		for(String e : AlgoritemOptions)
-			System.out.println(e);
+		Iterator<Integer> it = AlgoritemOptions.keySet().iterator();
+		while(it.hasNext()){
+			Integer entry = it.next();
+			System.out.println(entry+". "+AlgoritemOptions.get(entry));
+		}
 	}
 	
 	public void chooseAlgoritem(){
 		System.out.println();
 		System.out.println("choose your algoritem:");
     	Scanner reader = new Scanner (System.in);
-    	String userInput;
+    	String userInput = null;
     	boolean correctInput = false;
     	while(!correctInput){            	
         	userInput = reader.nextLine();
@@ -34,10 +45,11 @@ public class AlgoritemManaging {
         		correctInput=false;
         	}
     	}
+    	choosenMethod = Integer.parseInt(userInput);
     	reader.close();
 	}
 
-	public void executeMethod(){
+	private void executeMethod(int methodNumber, int key, String filePath){
 		
 	}
 }

@@ -24,16 +24,14 @@ import Encryptor.Encryptor.AlgoritemManaging;
 }
 
 public class EncryptionAlgoritems extends AlgoritemManaging {
-
-	private int choosenMethod;
 	public final static EncryptionAlgoritems instance = new EncryptionAlgoritems();
 	
 	private EncryptionAlgoritems(){
-		choosenMethod=0;
 		for(Method m : EncryptionAlgoritems.class.getDeclaredMethods()){
 			if(m.isAnnotationPresent(EncryptionMethod.class)){
-				AlgoritemOptions.add(m.getAnnotation(EncryptionMethod.class).serialNumber()+". "+
-					m.getAnnotation(EncryptionMethod.class).name());
+				AlgoritemOptions.put(m.getAnnotation(EncryptionMethod.class).serialNumber(),
+						m.getAnnotation(EncryptionMethod.class).name());
+				ExecutableMethods.put(m.getAnnotation(EncryptionMethod.class).serialNumber(),m);
 			}
 		}
 	}

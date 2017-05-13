@@ -23,16 +23,14 @@ import Encryptor.Encryptor.AlgoritemManaging;
 }
 
 public class DecryptionAlgoritems extends AlgoritemManaging {
-	private int choosenMethod;
 	public final static DecryptionAlgoritems instance = new DecryptionAlgoritems();
 	
 	private DecryptionAlgoritems(){
-		choosenMethod=0;
-		AlgoritemOptions = new ArrayList<>();
 		for(Method m : DecryptionAlgoritems.class.getDeclaredMethods()){
 			if(m.isAnnotationPresent(DecryptionnMethod.class))
-				AlgoritemOptions.add(m.getAnnotation(DecryptionnMethod.class).serialNumber()+". "+
+				AlgoritemOptions.put(m.getAnnotation(DecryptionnMethod.class).serialNumber(),
 						m.getAnnotation(DecryptionnMethod.class).name());
+			ExecutableMethods.put(m.getAnnotation(DecryptionnMethod.class).serialNumber(),m);
 		}
 	}
 	
