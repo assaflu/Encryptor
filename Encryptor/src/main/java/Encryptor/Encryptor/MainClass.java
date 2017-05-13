@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import EncryptionAlgoritems.*;
+import DecryptionAlgoritems.*;
 
 import EncryptionAlgoritems.EncryptionAlgoritems;
 
@@ -39,10 +41,14 @@ public class MainClass
             switch (userInput) {
 			case "1":
 				System.out.println("You choose encryption");
+				EncryptionAlgoritems.instance.printOptions();
+				EncryptionAlgoritems.instance.chooseAlgoritem();
 				flag = false;
 				break;
 			case "2":
 				System.out.println("You choose decryption");
+				DecryptionAlgoritems.instance.printOptions();
+				DecryptionAlgoritems.instance.chooseAlgoritem();
 				flag=false;
 				break;
 			default:
@@ -59,7 +65,6 @@ public class MainClass
     		System.out.println("the path either not leads to a file or not exists.\nenter new path:");
     		userInput = reader.nextLine();
     		inputFile = new File(userInput);
-    		//System.out.println(inputFile.exists()+ " "+  inputFile.isFile());
     		flag = inputFile.exists() && inputFile.isFile();
     	} 	
         reader.close();
@@ -76,11 +81,11 @@ public class MainClass
 
   			EncryptionAlgoritems.CaesarEncryption(x, userInput);
   			//userInput = "C:\\Users\\assaflu\\Desktop\\LocationManagerNotSpart.txt.encrypted";
-			DecryptionAlgoritems.DecryptionAlgoritems.CaesarDecryption(x, userInput,"txt");
+			DecryptionAlgoritems.CaesarDecryption(x, userInput,"txt");
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}        
+		} */       
     }
 }
