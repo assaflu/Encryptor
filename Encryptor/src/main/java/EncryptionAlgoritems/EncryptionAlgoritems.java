@@ -1,6 +1,7 @@
 package EncryptionAlgoritems;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -29,6 +30,13 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 			}
 		}
 	}
+	private static void saveNewFile(String filePath, byte [] encryptedFile) throws IOException{
+		StringBuilder savePath = new StringBuilder(filePath);
+		savePath.append(".encrypted");
+		FileOutputStream out = new FileOutputStream(savePath.toString());
+		out.write(encryptedFile);
+		out.close();
+	}
 	
 	@EncryptionMethod(name = "Caesar Encryption",serialNumber=1)
 	public static void caesarEncryption(DecEncAthorization athorization,int key, String filePath) throws IOException, NotAllowedException{
@@ -48,10 +56,6 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 			loopCounter++;
 		}
 		fileinputstream.close();
-		StringBuilder savePath = new StringBuilder(filePath);
-		savePath.append(".encrypted");
-		FileOutputStream out = new FileOutputStream(savePath.toString());
-		out.write(encryptedFile);
-		out.close();
+		saveNewFile(filePath, encryptedFile);
 	}
 }

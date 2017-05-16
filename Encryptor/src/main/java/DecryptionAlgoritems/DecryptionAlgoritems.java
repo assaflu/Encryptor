@@ -1,6 +1,7 @@
 package DecryptionAlgoritems;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -20,36 +21,42 @@ public class DecryptionAlgoritems extends AlgoritemManaging {
 	
 	private DecryptionAlgoritems(){
 		for(Method m : DecryptionAlgoritems.class.getDeclaredMethods()){
-			if(m.isAnnotationPresent(DecryptionnMethod.class))
+			if(m.isAnnotationPresent(DecryptionnMethod.class)){
 				AlgoritemOptions.put(m.getAnnotation(DecryptionnMethod.class).serialNumber(),
 						m.getAnnotation(DecryptionnMethod.class).name());
-			ExecutableMethods.put(m.getAnnotation(DecryptionnMethod.class).serialNumber(),m);
+				ExecutableMethods.put(m.getAnnotation(DecryptionnMethod.class).serialNumber(),m);
+			}
 		}
 	}
 	
+	private static void saveFile (String filePath, byte[] decryptedFile) throws IOException{
+		StringBuilder savePath = new StringBuilder(filePath);
+		String [] extention = filePath.split("\\.");
+		savePath.append("_decd."+extention[extention.length-2]);
+		FileOutputStream out = new FileOutputStream(savePath.toString());
+		out.write(decryptedFile);
+		out.close();
+	}
+	
 	@DecryptionnMethod(name = "Caesar Decryption", serialNumber = 1)
-	public static void caesarDecryption(DecEncAthorization athorization,int key, String filePath) throws IOException, NotAllowedException{
+	public static void caesarDecryption(DecEncAthorization athorization,Integer key, String filePath) throws IOException, NotAllowedException{
 		if(athorization == null){
 			throw new NotAllowedException();
 		}
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
-		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
+		byte decryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
 		while (fileinputstream.getChannel().position()<fileinputstream.getChannel().size()){
 			int read = fileinputstream.read();
 			read = read-key;
 			if(read<Byte.MIN_VALUE){
 				read=Byte.MAX_VALUE+read-(Byte.MIN_VALUE+1);
 			}
-			encryptedFile[loopCounter] = (byte) read;
+			decryptedFile[loopCounter] = (byte) read;
 			loopCounter++;
 		}
 		fileinputstream.close();
-		StringBuilder savePath = new StringBuilder(filePath);
-		//savePath.append("_decd."+extention);
-		FileOutputStream out = new FileOutputStream(savePath.toString());
-		out.write(encryptedFile);
-		out.close();
+		saveFile(filePath, decryptedFile);
 	}
 
 }

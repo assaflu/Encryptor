@@ -58,13 +58,10 @@ public class AlgoritemManaging {
 	}
 	
 	public void executeMethod(int key, String filePath){
-		if(this instanceof EncryptionAlgoritems){
-			try {
-				System.out.println(ExecutableMethods.get(choosenMethod).getParameterCount());
-				ExecutableMethods.get(choosenMethod).invoke(null,athorization, key, filePath);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				System.out.println(e.getMessage());
-			}
+		try {
+			ExecutableMethods.get(choosenMethod).invoke(null,athorization, key, filePath);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			System.out.println(e.getMessage());
 		}
 		choosenMethod=0;
 	}
