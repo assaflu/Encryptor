@@ -24,8 +24,6 @@ public class MainClass
 	}
 	
 	private static void execute(int key, String filePath){
-		System.out.println(EncryptionAlgoritems.instance.getChosenMethod());
-		System.out.println(DecryptionAlgoritems.instance.getChosenMethod());
 		if(EncryptionAlgoritems.instance.getChosenMethod()!=0)
 			EncryptionAlgoritems.instance.executeMethod(key, filePath);
 		else if(DecryptionAlgoritems.instance.getChosenMethod()!=0)
