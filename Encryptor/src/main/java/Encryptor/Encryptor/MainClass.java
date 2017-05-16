@@ -38,6 +38,7 @@ public class MainClass
     	String userInput;
     	boolean flag = true;
     	System.out.println("Welcome to the Encryption and Decryption application");
+    	int key = 0;
     	while(flag){
             System.out.println("Choose your operation:");
             System.out.println("1.\tEncrypt file");
@@ -52,12 +53,16 @@ public class MainClass
 				System.out.println("You choose encryption");
 				EncryptionAlgoritems.instance.printOptions();
 				EncryptionAlgoritems.instance.chooseAlgoritem();
+				key = GenerateKey(Byte.MAX_VALUE);
 				flag = false;
 				break;
 			case "2":
 				System.out.println("You choose decryption");
 				DecryptionAlgoritems.instance.printOptions();
 				DecryptionAlgoritems.instance.chooseAlgoritem();
+				System.out.println("Enter the key:");
+				userInput = reader.nextLine();
+				key = Integer.getInteger(userInput).intValue();
 				flag=false;
 				break;
 			default:
@@ -80,8 +85,6 @@ public class MainClass
         reader.close();
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt.encrypted
-        int key = GenerateKey(Byte.MAX_VALUE);
-        key=5;
         execute(key, userInput);
 		System.out.println("done");       
     }
