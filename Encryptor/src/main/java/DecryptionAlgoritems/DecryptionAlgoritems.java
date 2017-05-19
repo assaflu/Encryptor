@@ -32,7 +32,12 @@ public class DecryptionAlgoritems extends AlgoritemManaging {
 	private static void saveFile (String filePath, byte[] decryptedFile) throws IOException{
 		StringBuilder savePath = new StringBuilder(filePath);
 		String [] extention = filePath.split("\\.");
-		savePath.append("_decd."+extention[extention.length-2]);
+		if(extention.length >=3){
+			savePath.append("_decd."+extention[extention.length-2]);
+		}
+		else{
+			savePath.append("_decd."+extention[extention.length-1]);
+		}
 		FileOutputStream out = new FileOutputStream(savePath.toString());
 		out.write(decryptedFile);
 		out.close();
