@@ -17,11 +17,23 @@ public class AlgoritemManaging {
 	
 	public static class DecEncAthorization { private DecEncAthorization(){}}
 	private static final DecEncAthorization athorization = new DecEncAthorization();
+	private long time;
 	
 	protected AlgoritemManaging(){
 		choosenMethod=0;
 		AlgoritemOptions = new HashMap<>();
 		ExecutableMethods = new HashMap<>();
+	}
+	
+	private void endProcess(){
+		time = time - System.currentTimeMillis();
+		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
+		System.out.println("time to execute is "+ time);
+	}
+	
+	private void startProcess(){
+		time = System.currentTimeMillis();
+		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
 	}
 	
 	public void printOptions (){
@@ -52,17 +64,19 @@ public class AlgoritemManaging {
     	}
     	choosenMethod = Integer.parseInt(userInput);
 	}
-
+	
 	public int getChosenMethod(){
 		return choosenMethod;
 	}
 	
 	public void executeMethod(int key, String filePath){
+		startProcess();
 		try {
 			ExecutableMethods.get(choosenMethod).invoke(null,athorization, key, filePath);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			System.out.println(e.getMessage());
 		}
+		endProcess();
 		choosenMethod=0;
 	}
 }
