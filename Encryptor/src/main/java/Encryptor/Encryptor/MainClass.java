@@ -60,7 +60,7 @@ public class MainClass
 				DecryptionAlgoritems.instance.chooseAlgoritem();
 				System.out.println("Enter the key:");
 				userInput = reader.nextLine();
-				key = Integer.getInteger(userInput).intValue();
+				key = Integer.parseInt(userInput);
 				flag=false;
 				break;
 			default:

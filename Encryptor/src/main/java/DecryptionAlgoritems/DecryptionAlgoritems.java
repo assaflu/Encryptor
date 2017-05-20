@@ -63,5 +63,22 @@ public class DecryptionAlgoritems extends AlgoritemManaging {
 		fileinputstream.close();
 		saveFile(filePath, decryptedFile);
 	}
+	
+	@DecryptionnMethod(name = "XOR Decryption", serialNumber = 2)
+	public static void xorDecryption(DecEncAthorization athorization,Integer key, String filePath) throws IOException, NotAllowedException{
+		if(athorization == null){
+			throw new NotAllowedException();
+		}
+		int loopCounter = 0;
+		FileInputStream  fileinputstream =new FileInputStream(filePath);
+		byte decryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
+		while (fileinputstream.getChannel().position()<fileinputstream.getChannel().size()){
+			int read = fileinputstream.read();
+			decryptedFile[loopCounter] = (byte) (read ^ key);
+			loopCounter++;
+		}
+		fileinputstream.close();
+		saveFile(filePath, decryptedFile);
+	}
 
 }
