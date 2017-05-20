@@ -9,7 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import Encryptor.Encryptor.AlgoritemManaging;
-import Encryptor.Encryptor.NotAllowedException;
+import Exceptions.IllegalKeyException;
+import Exceptions.NotAllowedException;
 
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -39,13 +40,15 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 	}
 	
 	@EncryptionMethod(name = "Caesar Encryption",serialNumber=1)
-	public static void caesarEncryption(DecEncAthorization athorization,int key, String filePath) throws IOException, NotAllowedException{
+	public static void caesarEncryption(DecEncAthorization athorization,Integer key, String filePath) throws IOException, NotAllowedException{
 		if(athorization == null){
 			throw new NotAllowedException();
 		}
+		
 		int loopCounter = 0;
 		FileInputStream  fileinputstream =new FileInputStream(filePath);
 		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
+		
 		while (fileinputstream.getChannel().position()<fileinputstream.getChannel().size()){
 			int read = fileinputstream.read();
 			read = read+key;
@@ -60,7 +63,7 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 	}
 
 	@EncryptionMethod(name = "XOR Encryption",serialNumber=2)
-	public static void xorEncryption (DecEncAthorization athorization,int key, String filePath) throws NotAllowedException, IOException{
+	public static void xorEncryption (DecEncAthorization athorization,Integer key, String filePath) throws NotAllowedException, IOException{
 		if(athorization == null){
 			throw new NotAllowedException();
 		}
@@ -76,4 +79,27 @@ public class EncryptionAlgoritems extends AlgoritemManaging {
 		saveNewFile(filePath, encryptedFile);
 	}
 
+	@EncryptionMethod(name = "MWO Encryption",serialNumber=3)
+	public static void multiplicationAlgoritemEncryption(DecEncAthorization athorization,Integer key, String filePath) throws NotAllowedException, IllegalKeyException, IOException{
+		if(athorization == null){
+			throw new NotAllowedException();
+		}
+		if(key %2 == 0){
+			throw new IllegalKeyException();
+		}
+		
+		int loopCounter = 0;
+		FileInputStream  fileinputstream =new FileInputStream(filePath);
+		byte encryptedFile[] = new byte[(int) fileinputstream.getChannel().size()];
+		Integer read = new Integer(0);
+		
+		while (fileinputstream.getChannel().position()<fileinputstream.getChannel().size()){
+			read = fileinputstream.read();
+			read = read*key;
+			encryptedFile[loopCounter] = read.byteValue();
+			loopCounter++;
+		}
+		fileinputstream.close();
+		saveNewFile(filePath, encryptedFile);
+	}
 }

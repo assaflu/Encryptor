@@ -1,4 +1,4 @@
-package Encryptor.Encryptor;
+package Exceptions;
 
 public class NotAllowedException extends Exception {
 
