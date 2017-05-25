@@ -1,5 +1,9 @@
 package Encryptor.Encryptor;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -14,10 +18,12 @@ public class AppTest
      * Create the test case
      *
      * @param testName name of the test case
+     * @throws FileNotFoundException 
      */
-    public AppTest( String testName )
+    public AppTest( String testName ) throws FileNotFoundException
     {
-        super( testName );
+    	System.out.println(new Scanner(new File(AppTest.class.getResource("small.xml").getFile())).useDelimiter("\\Z").next());
+        //super( testName );
     }
 
     /**

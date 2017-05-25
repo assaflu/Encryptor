@@ -1,34 +1,77 @@
 package Encryptor.Encryptor;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
-import EncryptionAlgoritems.EncryptionAlgoritems;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
+import DecryptionAlgoritems.Decryption;
+import EncryptionAlgoritems.Encryption;
+import Exceptions.DecryptionKeyIllegal;
+import Exceptions.IllegalKeyException;
+
 
 public class AlgoritemManaging {
 
 	protected Map<Integer, String> AlgoritemOptions;
-	protected Map<Integer, Method> ExecutableMethods;
+	protected Map<Integer, Class<? extends Encryption>> encryptionMethods;
+	protected Map<Integer, Class<? extends Decryption>> decryptionMethods;
 	protected int choosenMethod;
-	
-	public static class DecEncAthorization { private DecEncAthorization(){}}
-	private static final DecEncAthorization athorization = new DecEncAthorization();
+	protected WorkingMod mode;
 	private long time;
+	
+	public static final AlgoritemManaging instance = new AlgoritemManaging();
+	/*public static class DecEncAthorization { private DecEncAthorization(){}}
+	private static final DecEncAthorization athorization = new DecEncAthorization();*/
+	
 	
 	protected AlgoritemManaging(){
 		choosenMethod=0;
 		AlgoritemOptions = new HashMap<>();
-		ExecutableMethods = new HashMap<>();
+		encryptionMethods = new HashMap<>();
+		decryptionMethods = new HashMap<>();
+	}
+	
+	public void SetMode(WorkingMod mode){
+		this.mode = mode;
+		switch (this.mode){
+		case ENCRYPTION:
+			Reflections encryptionReflection = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("EncryptionAlgoritems")));
+	    	Set<Class<? extends Encryption>> encryptionClasses = encryptionReflection.getSubTypesOf(Encryption.class);
+	    	for(Class<? extends Encryption> e : encryptionClasses){
+	    		AlgoritemOptions.put(e.getDeclaredAnnotation(EncryptionClass.class).serialNumber(),
+	    				e.getDeclaredAnnotation(EncryptionClass.class).name());
+	    		encryptionMethods.put(e.getDeclaredAnnotation(EncryptionClass.class).serialNumber(),
+	    				e);
+	    	}
+			break;
+		case DECRYPTION:
+			Reflections decryptionReflection = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("EncryptionAlgoritems")));
+	    	Set<Class<? extends Decryption>> decryptionClasses = decryptionReflection.getSubTypesOf(Decryption.class);
+	    	for(Class<? extends Decryption> e : decryptionClasses){
+	    		AlgoritemOptions.put(e.getDeclaredAnnotation(DecryptionClass.class).serialNumber(),
+	    				e.getDeclaredAnnotation(DecryptionClass.class).name());
+	    		decryptionMethods.put(e.getDeclaredAnnotation(DecryptionClass.class).serialNumber(),
+	    				e);
+	    	}
+			break;
+		default:
+			//throw 
+		}
+		
 	}
 	
 	private void endProcess(){
-		time = time - System.currentTimeMillis();
+		time = System.currentTimeMillis() - time;
 		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
-		System.out.println("time to execute is "+ time);
+		System.out.println("time to execute is "+ time + " millisecond");
 	}
 	
 	private void startProcess(){
@@ -36,7 +79,7 @@ public class AlgoritemManaging {
 		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
 	}
 	
-	public void printOptions (){
+	private void printOptions (){
 		Iterator<Integer> it = AlgoritemOptions.keySet().iterator();
 		while(it.hasNext()){
 			Integer entry = it.next();
@@ -45,8 +88,8 @@ public class AlgoritemManaging {
 	}
 	
 	public void chooseAlgoritem(){
-		System.out.println();
 		System.out.println("choose your algoritem:");
+		printOptions();
     	@SuppressWarnings("resource")
 		Scanner reader = new Scanner (System.in);
     	String userInput = null;
@@ -69,13 +112,23 @@ public class AlgoritemManaging {
 		return choosenMethod;
 	}
 	
-	public void executeMethod(int key, String filePath){
+	public void executeMethod(byte key, Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
-		try {
-			ExecutableMethods.get(choosenMethod).invoke(null,athorization, key, filePath);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			System.out.println(e.getMessage());
+		switch (this.mode){
+		case ENCRYPTION:
+			encryptionMethods.get(choosenMethod).newInstance().Encrypt(key, filePath);
+			break;
+		case DECRYPTION:
+			decryptionMethods.get(choosenMethod).newInstance().Decrypt(key, filePath);
+			break;
 		}
+		endProcess();
+		choosenMethod=0;
+	}
+	
+	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException{
+		startProcess();
+		encryptionMethods.get(choosenMethod).newInstance().Encrypt(Encryption.keyGenerate(), filePath);
 		endProcess();
 		choosenMethod=0;
 	}

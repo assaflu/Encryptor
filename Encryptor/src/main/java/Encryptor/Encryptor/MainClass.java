@@ -1,14 +1,14 @@
 package Encryptor.Encryptor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Random;
+import java.nio.file.Paths;
 import java.util.Scanner;
-import EncryptionAlgoritems.*;
-import DecryptionAlgoritems.*;
 
-import EncryptionAlgoritems.EncryptionAlgoritems;
+
+import EncryptionAlgoritems.*;
+import Exceptions.DecryptionKeyIllegal;
+import Exceptions.IllegalKeyException;
 
 /**
  * Hello world!
@@ -16,27 +16,13 @@ import EncryptionAlgoritems.EncryptionAlgoritems;
  */
 public class MainClass 
 {
-	private static int GenerateKey (int upperLimit){
-		Random rand = new Random();
-		int returnMe = rand.nextInt(upperLimit);
-		System.out.println("key is: "+returnMe);
-		return returnMe;
-	}
-	
-	private static void execute(int key, String filePath){
-		if(EncryptionAlgoritems.instance.getChosenMethod()!=0)
-			EncryptionAlgoritems.instance.executeMethod(key, filePath);
-		else if(DecryptionAlgoritems.instance.getChosenMethod()!=0)
-			DecryptionAlgoritems.instance.executeMethod(key,filePath);
-	}
-	
     public static void main( String[] args )
     {
     	Scanner reader = new Scanner (System.in);
     	String userInput;
     	boolean flag = true;
     	System.out.println("Welcome to the Encryption and Decryption application");
-    	int key = 0;
+    	byte key = 0;
     	while(flag){
             System.out.println("Choose your operation:");
             System.out.println("1.\tEncrypt file");
@@ -49,18 +35,18 @@ public class MainClass
             switch (userInput) {
 			case "1":
 				System.out.println("You choose encryption");
-				EncryptionAlgoritems.instance.printOptions();
-				EncryptionAlgoritems.instance.chooseAlgoritem();
-				key = GenerateKey(Byte.MAX_VALUE);
+				AlgoritemManaging.instance.SetMode(WorkingMod.ENCRYPTION);
+				AlgoritemManaging.instance.chooseAlgoritem();
+				key = Encryption.keyGenerate();
 				flag = false;
 				break;
 			case "2":
 				System.out.println("You choose decryption");
-				DecryptionAlgoritems.instance.printOptions();
-				DecryptionAlgoritems.instance.chooseAlgoritem();
+				AlgoritemManaging.instance.SetMode(WorkingMod.DECRYPTION);
+				AlgoritemManaging.instance.chooseAlgoritem();
 				System.out.println("Enter the key:");
 				userInput = reader.nextLine();
-				key = Integer.parseInt(userInput);
+				key = Byte.parseByte(userInput);
 				flag=false;
 				break;
 			default:
@@ -82,8 +68,13 @@ public class MainClass
     	} 	
         reader.close();
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
-        //C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt.encrypted
-        execute(key, userInput);
-		System.out.println("done");       
+        //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
+        try {
+			AlgoritemManaging.instance.executeMethod(key,Paths.get(userInput));
+		} catch (InstantiationException | IllegalAccessException | IOException | IllegalKeyException | DecryptionKeyIllegal e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("done");   
     }
 }
