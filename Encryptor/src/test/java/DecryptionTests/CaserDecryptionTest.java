@@ -2,19 +2,15 @@ package DecryptionTests;
 
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.junit.Test;
 
 import DecryptionAlgoritems.CaesarDecryption;
 import EncryptionAlgoritems.CaesarEncryption;
-import EncryptionTests.CaserEncryptiontest;
 import Exceptions.IllegalKeyException;
 
-public class CaserDecryptionTest {
+public class CaserDecryptionTest{
 	@Test
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException{
 		/*encrypt the file to the test, assume that the encryption works*/

@@ -8,4 +8,5 @@ public @interface EncryptionClass {
 	String name();
 	int serialNumber();
 	int numberOfKeys();
+	EncryptionDecryptionLevel level() default EncryptionDecryptionLevel.BASIC;
 }

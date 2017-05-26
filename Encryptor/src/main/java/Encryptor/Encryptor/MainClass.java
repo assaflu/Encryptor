@@ -22,7 +22,6 @@ public class MainClass
     	String userInput;
     	boolean flag = true;
     	System.out.println("Welcome to the Encryption and Decryption application");
-    	byte key = 0;
     	while(flag){
             System.out.println("Choose your operation:");
             System.out.println("1.\tEncrypt file");
@@ -60,12 +59,24 @@ public class MainClass
     		inputFile = new File(userInput);
     		flag = inputFile.exists() && inputFile.isFile();
     	} 	
-        reader.close();
+        //reader.close();
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
         try {
 			AlgoritemManaging.instance.executeMethod(Paths.get(userInput));
-		} catch (InstantiationException | IllegalAccessException | IOException | IllegalKeyException | DecryptionKeyIllegal e) {
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DecryptionKeyIllegal e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

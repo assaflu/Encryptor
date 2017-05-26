@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,9 +36,9 @@ public class AlgoritemManaging {
 	
 	protected AlgoritemManaging(){
 		choosenMethod=0;
-		AlgoritemOptions = new HashMap<>();
-		encryptionMethods = new HashMap<>();
-		decryptionMethods = new HashMap<>();
+		AlgoritemOptions = new HashMap<Integer, String>();
+		encryptionMethods = new HashMap<Integer, Class<? extends Encryption>>();
+		decryptionMethods = new HashMap<Integer, Class<? extends Decryption>>();
 	}
 	
 	private void endProcess(){
@@ -147,6 +148,48 @@ public class AlgoritemManaging {
 	
 	public int getChosenMethod(){
 		return choosenMethod;
+	}
+	
+	public ArrayList<Class<? extends Encryption>> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems){
+		
+		ArrayList<Class<? extends Encryption>> methodsToReturn = new ArrayList<Class<? extends Encryption>>();
+		Iterator<Integer> it = encryptionMethods.keySet().iterator();
+		Map<Integer, String> basicAlgoritems = new HashMap<Integer, String>();
+		while(it.hasNext()){
+			Integer entry = it.next();
+			if(encryptionMethods.get(entry).getDeclaredAnnotation(EncryptionClass.class).level() == EncryptionDecryptionLevel.BASIC)
+				basicAlgoritems.put(entry, AlgoritemOptions.get(entry));
+		}
+		
+		it = basicAlgoritems.keySet().iterator();
+		System.out.println("Choose from these basic Algoritem:");
+		while(it.hasNext()){
+			Integer entry = it.next();
+			System.out.println(entry+". "+basicAlgoritems.get(entry));
+		}
+		
+		for(int i=0; i<numberOfAlgoritems; i++){
+			@SuppressWarnings("resource")
+			Scanner reader = new Scanner (System.in);
+	    	String userInput = null;
+	    	boolean correctInput = false;
+	    	while(!correctInput){            	
+	        	userInput = reader.nextLine();
+	        	try{
+	        		correctInput = basicAlgoritems.get(Integer.parseInt(userInput)) != null;
+	        		if(!correctInput)
+	        			System.out.println("unmatching index");
+	        		else
+	        			methodsToReturn.add(encryptionMethods.get(Integer.parseInt(userInput)));
+	        	}
+	        	catch(NumberFormatException e){
+	        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
+	        		correctInput=false;
+	        	}
+	    	}
+		}
+		
+		return methodsToReturn;
 	}
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
