@@ -10,13 +10,13 @@ import Encryptor.Encryptor.EncryptionClass;
 public class XOREncryption extends Encryption{
 
 	@Override
-	public void Encrypt(byte key, Path filePath) throws IOException {
-		byte fileContent [] = Files.readAllBytes(filePath);
+	public byte[] Encrypt(byte key, byte[] data) {
+		byte encryptedData [] = new byte [data.length];
 		
-		for(int i=0; i< fileContent.length;i++){
-			fileContent[i] = (byte) (fileContent[i] ^ key);
+		for(int i=0; i< data.length;i++){
+			encryptedData[i] = (byte) (data[i] ^ key);
 		}
-		saveFile(fileContent,filePath);
+		return encryptedData;
 	}
 
 }

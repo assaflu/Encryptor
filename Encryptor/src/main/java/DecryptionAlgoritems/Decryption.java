@@ -23,5 +23,5 @@ public abstract class Decryption{
 		out.close();
 	}
 	
-	abstract public void Decrypt(byte key, Path filePath) throws IOException, IllegalKeyException, DecryptionKeyIllegal;
+	abstract public byte[] Decrypt(byte key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal;
 }

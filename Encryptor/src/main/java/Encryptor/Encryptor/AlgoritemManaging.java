@@ -1,6 +1,9 @@
 package Encryptor.Encryptor;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +39,54 @@ public class AlgoritemManaging {
 		decryptionMethods = new HashMap<>();
 	}
 	
+	private void endProcess(){
+		time = System.currentTimeMillis() - time;
+		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
+		System.out.println("time to execute is "+ time + " millisecond");
+	}
+	
+	private void startProcess(){
+		time = System.currentTimeMillis();
+		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
+	}
+	
+	private void printOptions (){
+		Iterator<Integer> it = AlgoritemOptions.keySet().iterator();
+		while(it.hasNext()){
+			Integer entry = it.next();
+			System.out.println(entry+". "+AlgoritemOptions.get(entry));
+		}
+	}
+	
+	private byte[] loadData (Path filePath) throws IOException{
+		return Files.readAllBytes(filePath);
+	}
+	
+	private void saveData (Path filePath, byte[] data) throws IOException{
+		String savePath = filePath.toString();
+		FileOutputStream out;
+		switch (this.mode){
+		case ENCRYPTION:
+			savePath = savePath.concat(".encrypted");
+			out = new FileOutputStream(savePath.toString());
+			out.write(data);
+			out.close();
+			break;
+		case DECRYPTION:
+			String [] extention = savePath.split("\\.");
+			if(extention.length >=3){
+				savePath = savePath.concat("_decd."+extention[extention.length-2]);
+			}
+			else{
+				savePath = savePath.concat("_decd."+extention[extention.length-1]);
+			}
+			out = new FileOutputStream(savePath.toString());
+			out.write(data);
+			out.close();
+		break;
+		}
+	}
+	
 	public void SetMode(WorkingMod mode){
 		this.mode = mode;
 		switch (this.mode){
@@ -65,25 +116,6 @@ public class AlgoritemManaging {
 		
 	}
 	
-	private void endProcess(){
-		time = System.currentTimeMillis() - time;
-		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
-		System.out.println("time to execute is "+ time + " millisecond");
-	}
-	
-	private void startProcess(){
-		time = System.currentTimeMillis();
-		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
-	}
-	
-	private void printOptions (){
-		Iterator<Integer> it = AlgoritemOptions.keySet().iterator();
-		while(it.hasNext()){
-			Integer entry = it.next();
-			System.out.println(entry+". "+AlgoritemOptions.get(entry));
-		}
-	}
-	
 	public void chooseAlgoritem(){
 		System.out.println("choose your algoritem:");
 		printOptions();
@@ -111,21 +143,23 @@ public class AlgoritemManaging {
 	
 	public void executeMethod(byte key, Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
+		byte data [] = null;
 		switch (this.mode){
 		case ENCRYPTION:
-			encryptionMethods.get(choosenMethod).newInstance().Encrypt(key, filePath);
+			data = encryptionMethods.get(choosenMethod).newInstance().Encrypt(key, loadData(filePath));
 			break;
 		case DECRYPTION:
-			decryptionMethods.get(choosenMethod).newInstance().Decrypt(key, filePath);
+			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(key, loadData(filePath));
 			break;
 		}
+		saveData(filePath, data);
 		endProcess();
 		choosenMethod=0;
 	}
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException{
 		startProcess();
-		encryptionMethods.get(choosenMethod).newInstance().Encrypt(Encryption.keyGenerate(), filePath);
+		encryptionMethods.get(choosenMethod).newInstance().Encrypt(Encryption.keyGenerate(), loadData(filePath));
 		endProcess();
 		choosenMethod=0;
 	}

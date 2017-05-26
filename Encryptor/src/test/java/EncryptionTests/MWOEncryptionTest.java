@@ -17,31 +17,19 @@ public class MWOEncryptionTest {
 
 	@Test(expected = IllegalKeyException.class)
 	public void testValidkey() throws IOException, URISyntaxException, IllegalKeyException{
-		URI path = CaserEncryptiontest.class.getClassLoader().getResource("simple.txt").toURI();
+		byte data [] = {97,98,99,100};
 		MWOEncryption c = new MWOEncryption();
-		c.Encrypt((byte)50,Paths.get(path));
+		byte[] encData = c.Encrypt((byte)50,data);
 	}
 	
 	@Test
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException{
-		URI path = CaserEncryptiontest.class.getClassLoader().getResource("simple.txt").toURI();
+		byte data [] = {97,98,99,100};
 		MWOEncryption c = new MWOEncryption();
-		c.Encrypt((byte)51,Paths.get(path));
-		URI encPath = CaserEncryptiontest.class.getClassLoader().getResource("simple.txt.encrypted").toURI();
-		byte[] encData = Files.readAllBytes(Paths.get(encPath));
+		byte[] encData = c.Encrypt((byte)51,data);
 		assert encData [0] == (byte)(97*51);
 		assert encData [1] == (byte)(98*51);
 		assert encData [2] == (byte)(99*51);
 		assert encData [3] == (byte)(100*51);
-	}
-	
-	@Test
-	public void testEmpty() throws IOException, URISyntaxException{
-		URI path = CaserEncryptiontest.class.getClassLoader().getResource("empty.txt").toURI();
-		CaesarEncryption c = new CaesarEncryption();
-		c.Encrypt((byte)50,Paths.get(path));
-		URI encPath = CaserEncryptiontest.class.getClassLoader().getResource("empty.txt.encrypted").toURI();
-		byte[] encData = Files.readAllBytes(Paths.get(encPath));
-		assert encData.length == 0;
 	}
 }

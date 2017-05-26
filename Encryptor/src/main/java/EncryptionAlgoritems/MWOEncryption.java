@@ -11,16 +11,16 @@ import Exceptions.IllegalKeyException;
 public class MWOEncryption extends Encryption{
 
 	@Override
-	public void Encrypt(byte key, Path filePath) throws IOException, IllegalKeyException {
+	public byte[] Encrypt(byte key, byte[] data) throws IllegalKeyException {
 		if(key %2 == 0)
 			throw new IllegalKeyException();
 		
-		byte fileContent [] = Files.readAllBytes(filePath);	
+		byte encryptedData [] = new byte [data.length];
 		
-		for(int i=0; i< fileContent.length;i++){
-			fileContent[i] = (byte)(fileContent[i] * key);
+		for(int i=0; i< data.length;i++){
+			encryptedData[i] = (byte)(data[i] * key);
 		}
-		saveFile(fileContent,filePath);	
+		return encryptedData;	
 	}
 
 }

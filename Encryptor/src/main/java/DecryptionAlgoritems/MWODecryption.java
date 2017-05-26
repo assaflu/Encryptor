@@ -1,9 +1,5 @@
 package DecryptionAlgoritems;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import Encryptor.Encryptor.DecryptionClass;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
@@ -20,7 +16,7 @@ public class MWODecryption extends Decryption{
 	}
 	
 	@Override
-	public void Decrypt(byte key, Path filePath) throws IOException, IllegalKeyException, DecryptionKeyIllegal {
+	public byte[] Decrypt(byte key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
 		if(key%2 == 0){
 			throw new IllegalKeyException();
 		}
@@ -30,10 +26,10 @@ public class MWODecryption extends Decryption{
 			throw new DecryptionKeyIllegal();
 		}
 		
-		byte fileContent [] = Files.readAllBytes(filePath);
-		for(int i=0; i< fileContent.length;i++){
-			fileContent[i] = (byte)(fileContent[i] * decryptionKey);
+		byte decryptData [] = new byte[data.length];
+		for(int i=0; i< data.length;i++){
+			decryptData[i] = (byte)(data[i] * decryptionKey);
 		}
-		saveFile(fileContent ,filePath);		
+		return decryptData;		
 	}
 }

@@ -25,6 +25,6 @@ public abstract class Encryption{
 		out.close();
 	}
 	
-	abstract public void Encrypt(byte key, Path filePath) throws IOException, IllegalKeyException;
+	abstract public byte[] Encrypt(byte key, byte[] data) throws IllegalKeyException;
 	
 }

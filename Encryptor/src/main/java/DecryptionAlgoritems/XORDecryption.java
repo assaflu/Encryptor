@@ -1,23 +1,18 @@
 package DecryptionAlgoritems;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import Encryptor.Encryptor.DecryptionClass;
-import Exceptions.IllegalKeyException;
 
 @DecryptionClass(name = "XOR Decryption", serialNumber = 2)
 public class XORDecryption extends Decryption{
 
 	@Override
-	public void Decrypt(byte key, Path filePath) throws IOException, IllegalKeyException {
+	public byte[] Decrypt(byte key, byte[] data){
 		
-		byte fileContent [] = Files.readAllBytes(filePath);
-		for(int i=0; i< fileContent.length;i++){
-			fileContent[i] = (byte)(fileContent[i] ^ key);
+		byte decryptData [] = new byte [data.length];
+		for(int i=0; i< data.length;i++){
+			decryptData[i] = (byte)(data[i] ^ key);
 		}
-		saveFile(fileContent ,filePath);
+		return decryptData;
 	}
 
 }
