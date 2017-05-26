@@ -20,7 +20,6 @@ public abstract class Encryption{
 	protected void saveFile (byte[] data,Path filePath) throws IOException{
 		String savePath = filePath.toString();
 		savePath = savePath.concat(".encrypted");
-		System.out.println(savePath);
 		FileOutputStream out = new FileOutputStream(savePath.toString());
 		out.write(data);
 		out.close();

@@ -28,9 +28,6 @@ public class AlgoritemManaging {
 	private long time;
 	
 	public static final AlgoritemManaging instance = new AlgoritemManaging();
-	/*public static class DecEncAthorization { private DecEncAthorization(){}}
-	private static final DecEncAthorization athorization = new DecEncAthorization();*/
-	
 	
 	protected AlgoritemManaging(){
 		choosenMethod=0;

@@ -12,11 +12,11 @@ import Exceptions.IllegalKeyException;
 public class MWODecryption extends Decryption{
 	
 	private static int MWOKeyFinder (byte key){
-		for(int i = Byte.MAX_VALUE; i<=Byte.MAX_VALUE;i++){
-			if((key*i)== 1)
-				return i;
+		for(int i = Byte.MIN_VALUE; i<=Byte.MAX_VALUE;i++){
+			if((byte)(key*i)== 1)
+				return i;				
 		}
-		return -1;
+		return Byte.MAX_VALUE+1;
 	}
 	
 	@Override
@@ -26,7 +26,7 @@ public class MWODecryption extends Decryption{
 		}
 		
 		int decryptionKey = MWOKeyFinder(key);
-		if(decryptionKey%2 ==0 || decryptionKey ==-1){
+		if(decryptionKey%2 ==0 || decryptionKey ==Byte.MAX_VALUE+1){
 			throw new DecryptionKeyIllegal();
 		}
 		
