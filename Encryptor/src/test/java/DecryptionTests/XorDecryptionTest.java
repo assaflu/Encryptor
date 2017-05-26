@@ -22,10 +22,11 @@ public class XorDecryptionTest {
 		/*encrypt the file to the test, assume that the encryption works*/
 		byte data [] = {97,98,99,100};
 		XOREncryption ce = new XOREncryption();
-		byte[] encData = ce.Encrypt((byte)50,data);
+		byte [] keys = {50};
+		byte[] encData = ce.Encrypt(keys,data);
 		
 		XORDecryption c = new XORDecryption();
-		byte[] decData = c.Decrypt((byte)50,encData);
+		byte[] decData = c.Decrypt(keys,encData);
 		assert decData [0] == (byte)(97);
 		assert decData [1] == (byte)(98);
 		assert decData [2] == (byte)(99);

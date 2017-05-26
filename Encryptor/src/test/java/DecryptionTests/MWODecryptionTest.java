@@ -20,7 +20,8 @@ public class MWODecryptionTest {
 	@Test(expected = IllegalKeyException.class)
 	public void testValidkey() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		MWODecryption c = new MWODecryption();
-		c .Decrypt((byte)50,null);
+		byte [] keys = {50};
+		c .Decrypt(keys,null);
 	}
 	
 	@Test
@@ -28,10 +29,11 @@ public class MWODecryptionTest {
 		/*encrypt the file to the test, assume that the encryption works*/
 		byte data [] = {97,98,99,100};
 		MWOEncryption ce = new MWOEncryption();
-		byte[] encData = ce.Encrypt((byte)51,data);
+		byte [] keys = {51};
+		byte[] encData = ce.Encrypt(keys,data);
 				
 		MWODecryption c = new MWODecryption();
-		byte[] decData = c.Decrypt((byte)51,encData);
+		byte[] decData = c.Decrypt(keys,encData);
 		assert decData [0] == (byte)(97);
 		assert decData [1] == (byte)(98);
 		assert decData [2] == (byte)(99);

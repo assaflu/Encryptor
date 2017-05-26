@@ -7,4 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface EncryptionClass {
 	String name();
 	int serialNumber();
+	int numberOfKeys();
 }

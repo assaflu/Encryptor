@@ -4,7 +4,7 @@ import Encryptor.Encryptor.DecryptionClass;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
-@DecryptionClass(name = "MWO Decryption", serialNumber = 3)
+@DecryptionClass(name = "MWO Decryption", serialNumber = 3, numberOfKeys = 1)
 public class MWODecryption extends Decryption{
 	
 	private static int MWOKeyFinder (byte key){
@@ -16,12 +16,12 @@ public class MWODecryption extends Decryption{
 	}
 	
 	@Override
-	public byte[] Decrypt(byte key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
-		if(key%2 == 0){
+	public byte[] Decrypt(byte [] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
+		if(key[0]%2 == 0){
 			throw new IllegalKeyException();
 		}
 		
-		int decryptionKey = MWOKeyFinder(key);
+		int decryptionKey = MWOKeyFinder(key[0]);
 		if(decryptionKey%2 ==0 || decryptionKey ==Byte.MAX_VALUE+1){
 			throw new DecryptionKeyIllegal();
 		}

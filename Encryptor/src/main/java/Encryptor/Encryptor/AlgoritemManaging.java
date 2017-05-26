@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -56,6 +57,13 @@ public class AlgoritemManaging {
 			Integer entry = it.next();
 			System.out.println(entry+". "+AlgoritemOptions.get(entry));
 		}
+	}
+	
+	private byte[] keyGenerate(int numberOfKeys){
+		Random rand = new Random();
+		byte key[] = new byte [numberOfKeys] ;
+		rand.nextBytes(key);
+		return key;
 	}
 	
 	private byte[] loadData (Path filePath) throws IOException{
@@ -141,25 +149,29 @@ public class AlgoritemManaging {
 		return choosenMethod;
 	}
 	
-	public void executeMethod(byte key, Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
+	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
 		byte data [] = null;
+		byte[] keys = null;
+		int numberOfKeys = 0;
 		switch (this.mode){
 		case ENCRYPTION:
-			data = encryptionMethods.get(choosenMethod).newInstance().Encrypt(key, loadData(filePath));
+			numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
+			keys = keyGenerate(numberOfKeys);
+			System.out.println("The keys are:");
+			for(byte b : keys){
+				System.out.println(b);
+			}
+			data = encryptionMethods.get(choosenMethod).newInstance().Encrypt(keys, loadData(filePath));
 			break;
 		case DECRYPTION:
-			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(key, loadData(filePath));
+			numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
+			System.out.println("Enter "+numberOfKeys+ " keys:");
+			System.in.read(keys);
+			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(keys, loadData(filePath));
 			break;
 		}
 		saveData(filePath, data);
-		endProcess();
-		choosenMethod=0;
-	}
-	
-	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException{
-		startProcess();
-		encryptionMethods.get(choosenMethod).newInstance().Encrypt(Encryption.keyGenerate(), loadData(filePath));
 		endProcess();
 		choosenMethod=0;
 	}

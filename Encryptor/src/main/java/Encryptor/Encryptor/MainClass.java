@@ -36,17 +36,11 @@ public class MainClass
 			case "1":
 				System.out.println("You choose encryption");
 				AlgoritemManaging.instance.SetMode(WorkingMod.ENCRYPTION);
-				AlgoritemManaging.instance.chooseAlgoritem();
-				key = Encryption.keyGenerate();
 				flag = false;
 				break;
 			case "2":
 				System.out.println("You choose decryption");
 				AlgoritemManaging.instance.SetMode(WorkingMod.DECRYPTION);
-				AlgoritemManaging.instance.chooseAlgoritem();
-				System.out.println("Enter the key:");
-				userInput = reader.nextLine();
-				key = Byte.parseByte(userInput);
 				flag=false;
 				break;
 			default:
@@ -55,7 +49,7 @@ public class MainClass
 			}
             
     	}
-    	
+    	AlgoritemManaging.instance.chooseAlgoritem();
     	System.out.println("enter file path: ");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
@@ -70,7 +64,7 @@ public class MainClass
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
         try {
-			AlgoritemManaging.instance.executeMethod(key,Paths.get(userInput));
+			AlgoritemManaging.instance.executeMethod(Paths.get(userInput));
 		} catch (InstantiationException | IllegalAccessException | IOException | IllegalKeyException | DecryptionKeyIllegal e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

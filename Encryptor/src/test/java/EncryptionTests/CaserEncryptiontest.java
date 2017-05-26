@@ -16,7 +16,8 @@ public class CaserEncryptiontest {
 	public void testSimple() throws IOException, URISyntaxException{
 		byte data [] = {97,98,99,100};
 		CaesarEncryption c = new CaesarEncryption();
-		byte[] encData = c.Encrypt((byte)50,data);
+		byte [] keys = {50};
+		byte[] encData = c.Encrypt(keys,data);
 		assert encData [0] == (byte)(97+50);
 		assert encData [1] == (byte)(98+50);
 		assert encData [2] == (byte)(99+50);

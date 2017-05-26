@@ -19,14 +19,16 @@ public class MWOEncryptionTest {
 	public void testValidkey() throws IOException, URISyntaxException, IllegalKeyException{
 		byte data [] = {97,98,99,100};
 		MWOEncryption c = new MWOEncryption();
-		byte[] encData = c.Encrypt((byte)50,data);
+		byte [] keys = {50};
+		byte[] encData = c.Encrypt(keys,data);
 	}
 	
 	@Test
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException{
 		byte data [] = {97,98,99,100};
 		MWOEncryption c = new MWOEncryption();
-		byte[] encData = c.Encrypt((byte)51,data);
+		byte [] keys = {51};
+		byte[] encData = c.Encrypt(keys,data);
 		assert encData [0] == (byte)(97*51);
 		assert encData [1] == (byte)(98*51);
 		assert encData [2] == (byte)(99*51);
