@@ -161,7 +161,7 @@ public class AlgoritemManaging {
 		}
 		
 		it = basicAlgoritems.keySet().iterator();
-		System.out.println("Choose from these basic Algoritem:");
+		System.out.println("Choose " +numberOfAlgoritems+" from these basic Algoritem:");
 		while(it.hasNext()){
 			Integer entry = it.next();
 			System.out.println(entry+". "+basicAlgoritems.get(entry));
@@ -191,8 +191,51 @@ public class AlgoritemManaging {
 		return methodsToReturn;
 	}
 	
+	public ArrayList<Class<? extends Decryption>> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems){
+		ArrayList<Class<? extends Decryption>> methodsToReturn = new ArrayList<Class<? extends Decryption>>();
+		Iterator<Integer> it = decryptionMethods.keySet().iterator();
+		Map<Integer, String> basicAlgoritems = new HashMap<Integer, String>();
+		while(it.hasNext()){
+			Integer entry = it.next();
+			if(decryptionMethods.get(entry).getDeclaredAnnotation(DecryptionClass.class).level() == EncryptionDecryptionLevel.BASIC)
+				basicAlgoritems.put(entry, AlgoritemOptions.get(entry));
+		}
+		
+		it = basicAlgoritems.keySet().iterator();
+		System.out.println("Choose "+numberOfAlgoritems+" from these basic Algoritem:");
+		while(it.hasNext()){
+			Integer entry = it.next();
+			System.out.println(entry+". "+basicAlgoritems.get(entry));
+		}
+		
+		for(int i=0; i<numberOfAlgoritems; i++){
+			@SuppressWarnings("resource")
+			Scanner reader = new Scanner (System.in);
+	    	String userInput = null;
+	    	boolean correctInput = false;
+	    	while(!correctInput){            	
+	        	userInput = reader.nextLine();
+	        	try{
+	        		correctInput = basicAlgoritems.get(Integer.parseInt(userInput)) != null;
+	        		if(!correctInput)
+	        			System.out.println("unmatching index");
+	        		else
+	        			methodsToReturn.add(decryptionMethods.get(Integer.parseInt(userInput)));
+	        	}
+	        	catch(NumberFormatException e){
+	        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
+	        		correctInput=false;
+	        	}
+	    	}
+		}
+		
+		return methodsToReturn;
+	}
+	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
+		@SuppressWarnings("resource")
+		Scanner reader = new Scanner (System.in);
 		byte data [] = null;
 		byte[] keys = null;
 		int numberOfKeys = 0;
@@ -208,8 +251,11 @@ public class AlgoritemManaging {
 			break;
 		case DECRYPTION:
 			numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
+			keys = new byte [numberOfKeys];
 			System.out.println("Enter "+numberOfKeys+ " keys:");
-			System.in.read(keys);
+			for(int i=0; i<numberOfKeys; i++){
+				keys[i] = reader.nextByte();
+			}
 			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(keys, loadData(filePath));
 			break;
 		}

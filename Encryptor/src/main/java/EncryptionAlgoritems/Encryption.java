@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 public abstract class Encryption{
@@ -16,6 +17,6 @@ public abstract class Encryption{
 		out.close();
 	}
 	
-	abstract public byte[] Encrypt(byte [] key, byte[] data) throws IllegalKeyException;
+	abstract public byte[] Encrypt(byte [] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal;
 	
 }

@@ -1,21 +1,20 @@
-package EncryptionAlgoritems;
+package DecryptionAlgoritems;
 
 import java.util.ArrayList;
 
 import Encryptor.Encryptor.AlgoritemManaging;
-import Encryptor.Encryptor.EncryptionClass;
+import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
-@EncryptionClass(name = "Split Encryption", serialNumber = 6, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
-public class SplitEncryption extends Encryption {
+@DecryptionClass(name = "Split Decryption", serialNumber = 6, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
+public class SplitDecryption extends Decryption{
 
 	@Override
-	public byte[] Encrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
-		ArrayList<Class<? extends Encryption>> methods = 
-				AlgoritemManaging.instance.chooseBasicEncryptionAlgoritem(1);
-		
+	public byte[] Decrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
+		ArrayList<Class<? extends Decryption>> methods = 
+				AlgoritemManaging.instance.chooseBasicDecryptionAlgoritem(1);
 		byte even [] = new byte [data.length/2];
 		byte odd [] = null;
 		if(data.length %2 == 0){
@@ -32,9 +31,10 @@ public class SplitEncryption extends Encryption {
 		}
 		byte encEvenData[] = null;
 		byte encOddData[] = null;
+		
 		try {
-			encEvenData = methods.get(0).newInstance().Encrypt(key, even);
-			encOddData= methods.get(0).newInstance().Encrypt(key, odd);
+			encEvenData = methods.get(0).newInstance().Decrypt(key, even);
+			encOddData= methods.get(0).newInstance().Decrypt(key, odd);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

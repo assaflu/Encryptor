@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
+import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 @EncryptionClass(name = "Double Encryption", serialNumber = 4, numberOfKeys = 2,
@@ -13,7 +14,7 @@ import Exceptions.IllegalKeyException;
 public class DoubleEncryption extends Encryption{
 
 	@Override
-	public byte[] Encrypt(byte[] key, byte[] data) throws IllegalKeyException {
+	public byte[] Encrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
 		ArrayList<Class<? extends Encryption>> methods = 
 				AlgoritemManaging.instance.chooseBasicEncryptionAlgoritem(2);
 		byte firstKey[],secondKey[];
