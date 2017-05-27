@@ -23,7 +23,7 @@ import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 
-public class AlgoritemManaging {
+public class AlgoritemManaging implements EncryptionDecryptionManager {
 
 	protected Map<Integer, String> AlgoritemOptions;
 	protected Map<Integer, Class<? extends Encryption>> encryptionMethods;

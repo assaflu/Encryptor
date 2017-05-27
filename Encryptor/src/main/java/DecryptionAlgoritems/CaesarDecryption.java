@@ -1,10 +1,21 @@
 package DecryptionAlgoritems;
 
+import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
+import Encryptor.Encryptor.EncryptionDecryptionManager;
 
 
 @DecryptionClass(name = "Caesar Decryption", serialNumber = 1, numberOfKeys = 1)
 public class CaesarDecryption extends Decryption {
+
+	public CaesarDecryption(){
+		super(AlgoritemManaging.instance);
+	}
+	
+	public CaesarDecryption(EncryptionDecryptionManager manager) {
+		super(manager);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public byte[] Decrypt(byte [] key, byte [] data){

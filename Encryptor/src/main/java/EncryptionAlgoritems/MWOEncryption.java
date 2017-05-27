@@ -1,11 +1,22 @@
 package EncryptionAlgoritems;
 
 
+import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.EncryptionClass;
+import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.IllegalKeyException;
 
 @EncryptionClass(name = "MWO Encryption", serialNumber = 3, numberOfKeys = 1)
 public class MWOEncryption extends Encryption{
+
+	public MWOEncryption(){
+		super(AlgoritemManaging.instance);
+	}
+	
+	public MWOEncryption(EncryptionDecryptionManager manager) {
+		super(manager);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public byte[] Encrypt(byte [] key, byte[] data) throws IllegalKeyException {

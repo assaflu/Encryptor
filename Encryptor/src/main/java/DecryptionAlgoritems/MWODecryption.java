@@ -1,12 +1,23 @@
 package DecryptionAlgoritems;
 
+import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
+import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 @DecryptionClass(name = "MWO Decryption", serialNumber = 3, numberOfKeys = 1)
 public class MWODecryption extends Decryption{
 	
+	public MWODecryption(){
+		super(AlgoritemManaging.instance);
+	}
+	
+	public MWODecryption(EncryptionDecryptionManager manager) {
+		super(manager);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static int MWOKeyFinder (byte key){
 		for(int i = Byte.MIN_VALUE; i<=Byte.MAX_VALUE;i++){
 			if((byte)(key*i)== 1)

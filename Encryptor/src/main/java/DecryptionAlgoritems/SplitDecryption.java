@@ -5,16 +5,26 @@ import java.util.ArrayList;
 import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
+import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 @DecryptionClass(name = "Split Decryption", serialNumber = 6, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
 public class SplitDecryption extends Decryption{
 
+	public SplitDecryption(){
+		super(AlgoritemManaging.instance);
+	}
+	
+	public SplitDecryption(EncryptionDecryptionManager manager) {
+		super(manager);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public byte[] Decrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
 		ArrayList<Class<? extends Decryption>> methods = 
-				AlgoritemManaging.instance.chooseBasicDecryptionAlgoritem(1);
+				manager.chooseBasicDecryptionAlgoritem(1);
 		byte even [] = new byte [data.length/2];
 		byte odd [] = null;
 		if(data.length %2 == 0){

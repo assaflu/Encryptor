@@ -4,10 +4,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import Encryptor.Encryptor.AlgoritemManaging;
+import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
 public abstract class Decryption{
+	
+	protected EncryptionDecryptionManager manager;
+	
+	public Decryption(){
+		manager = AlgoritemManaging.instance;
+	}
+	
+	public Decryption(EncryptionDecryptionManager manager){
+		this.manager = manager;
+	}
 	
 	protected void saveFile (byte[] data,Path filePath) throws IOException{
 		String savePath = filePath.toString();
