@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ public class AlgoritemManaging {
 	protected Map<Integer, Class<? extends Decryption>> decryptionMethods;
 	protected int choosenMethod;
 	protected WorkingMod mode;
+	private Clock clock;
 	private long time;
 	
 	public static final AlgoritemManaging instance = new AlgoritemManaging();
@@ -38,16 +40,17 @@ public class AlgoritemManaging {
 		AlgoritemOptions = new HashMap<Integer, String>();
 		encryptionMethods = new HashMap<Integer, Class<? extends Encryption>>();
 		decryptionMethods = new HashMap<Integer, Class<? extends Decryption>>();
+		clock = Clock.systemDefaultZone();
 	}
 	
 	private void endProcess(){
-		time = System.currentTimeMillis() - time;
+		time = clock.millis() - time;
 		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
 		System.out.println("time to execute is "+ time + " millisecond");
 	}
 	
 	private void startProcess(){
-		time = System.currentTimeMillis();
+		time = clock.millis();
 		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
 	}
 	
