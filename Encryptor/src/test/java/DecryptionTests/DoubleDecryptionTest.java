@@ -1,4 +1,4 @@
-package EncryptionTests;
+package DecryptionTests;
 
 
 import java.io.IOException;
@@ -8,26 +8,28 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import DecryptionAlgoritems.CaesarDecryption;
 import DecryptionAlgoritems.Decryption;
+import DecryptionAlgoritems.DoubleDecryption;
 import DecryptionAlgoritems.MWODecryption;
 import DecryptionAlgoritems.XORDecryption;
-import EncryptionAlgoritems.ReverseEncryption;
 import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
-public class ReverseEncryptionTest {
+public class DoubleDecryptionTest {
 
 	@Test(expected = IllegalKeyException.class)
 	public void testException() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
 		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
+		arr.add(CaesarDecryption.class);
 		arr.add(MWODecryption.class);		
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
-		Mockito.when(m.chooseBasicDecryptionAlgoritem(1)).thenReturn(arr);
-		ReverseEncryption c = new ReverseEncryption(m);
-		byte [] keys = {50};
-		byte[] encData = c.Encrypt(keys,data);
+		Mockito.when(m.chooseBasicDecryptionAlgoritem(2)).thenReturn(arr);
+		DoubleDecryption c = new DoubleDecryption(m);
+		byte [] keys = {51,50};
+		byte[] encData = c.Decrypt(keys,data);
 		assert encData [0] == (byte)((97+51)^53);
 		assert encData [1] == (byte)((98+51)^53);
 		assert encData [2] == (byte)((99+51)^53);
@@ -38,16 +40,16 @@ public class ReverseEncryptionTest {
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
 		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
-		arr.add(XORDecryption.class);			
+		arr.add(CaesarDecryption.class);
+		arr.add(XORDecryption.class);		
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
-		Mockito.when(m.chooseBasicDecryptionAlgoritem(1)).thenReturn(arr);
-		ReverseEncryption c = new ReverseEncryption(m);
-		byte [] keys = {53};
-		byte[] encData = c.Encrypt(keys,data);
-		assert encData [0] == (byte)(97^53);
-		assert encData [1] == (byte)(98^53);
-		assert encData [2] == (byte)(99^53);
-		assert encData [3] == (byte)(100^53);
+		Mockito.when(m.chooseBasicDecryptionAlgoritem(2)).thenReturn(arr);
+		DoubleDecryption c = new DoubleDecryption(m);
+		byte [] keys = {51,53};
+		byte[] encData = c.Decrypt(keys,data);
+		assert encData [0] == (byte)((97-51)^53);
+		assert encData [1] == (byte)((98-51)^53);
+		assert encData [2] == (byte)((99-51)^53);
+		assert encData [3] == (byte)((100-51)^53);
 	}
-
 }

@@ -41,10 +41,11 @@ public class SplitDecryption extends Decryption{
 		}
 		byte encEvenData[] = null;
 		byte encOddData[] = null;
-		
+		byte firstKey [] = {key[0]};
+		byte secondKey [] = {key[1]};
 		try {
-			encEvenData = methods.get(0).newInstance().Decrypt(key, even);
-			encOddData= methods.get(0).newInstance().Decrypt(key, odd);
+			encEvenData = methods.get(0).newInstance().Decrypt(firstKey, even);
+			encOddData= methods.get(0).newInstance().Decrypt(secondKey, odd);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

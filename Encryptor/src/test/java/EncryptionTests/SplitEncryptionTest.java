@@ -1,6 +1,5 @@
 package EncryptionTests;
 
-import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -9,13 +8,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import DecryptionAlgoritems.Decryption;
-import DecryptionAlgoritems.MWODecryption;
-import DecryptionAlgoritems.SplitDecryption;
-import DecryptionAlgoritems.XORDecryption;
 import EncryptionAlgoritems.Encryption;
 import EncryptionAlgoritems.MWOEncryption;
-import EncryptionAlgoritems.ReverseEncryption;
 import EncryptionAlgoritems.SplitEncryption;
 import EncryptionAlgoritems.XOREncryption;
 import Encryptor.Encryptor.EncryptionDecryptionManager;
