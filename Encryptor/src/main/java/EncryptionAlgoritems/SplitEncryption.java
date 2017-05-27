@@ -42,9 +42,11 @@ public class SplitEncryption extends Encryption {
 		}
 		byte encEvenData[] = null;
 		byte encOddData[] = null;
+		byte [] firstKey = {key[0]};
+		byte [] secondKey = {key[1]};
 		try {
-			encEvenData = methods.get(0).newInstance().Encrypt(key, even);
-			encOddData= methods.get(0).newInstance().Encrypt(key, odd);
+			encEvenData = methods.get(0).newInstance().Encrypt(firstKey, even);
+			encOddData= methods.get(0).newInstance().Encrypt(secondKey, odd);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
