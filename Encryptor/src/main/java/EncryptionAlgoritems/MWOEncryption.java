@@ -1,8 +1,5 @@
 package EncryptionAlgoritems;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import Encryptor.Encryptor.EncryptionClass;
 import Exceptions.IllegalKeyException;

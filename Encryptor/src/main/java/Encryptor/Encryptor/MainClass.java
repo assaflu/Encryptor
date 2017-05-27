@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-
-import EncryptionAlgoritems.*;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 
@@ -59,7 +57,6 @@ public class MainClass
     		inputFile = new File(userInput);
     		flag = inputFile.exists() && inputFile.isFile();
     	} 	
-        //reader.close();
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
         try {
@@ -80,6 +77,7 @@ public class MainClass
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("done");   
+		System.out.println("done");  
+		reader.close();
     }
 }

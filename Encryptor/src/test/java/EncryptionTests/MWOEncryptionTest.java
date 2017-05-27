@@ -2,14 +2,10 @@ package EncryptionTests;
 
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import EncryptionAlgoritems.CaesarEncryption;
 import EncryptionAlgoritems.MWOEncryption;
 import Exceptions.IllegalKeyException;
 
@@ -20,6 +16,7 @@ public class MWOEncryptionTest {
 		byte data [] = {97,98,99,100};
 		MWOEncryption c = new MWOEncryption();
 		byte [] keys = {50};
+		@SuppressWarnings("unused")
 		byte[] encData = c.Encrypt(keys,data);
 	}
 	

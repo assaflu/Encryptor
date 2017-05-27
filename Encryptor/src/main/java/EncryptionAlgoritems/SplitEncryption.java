@@ -29,7 +29,8 @@ public class SplitEncryption extends Encryption {
 			else
 				odd[i/2] = data[i];
 		}
-		byte encEvenData[] = null,encOddData[] = null;
+		byte encEvenData[] = null;
+		byte encOddData[] = null;
 		try {
 			encEvenData = methods.get(0).newInstance().Encrypt(key, even);
 			encOddData= methods.get(0).newInstance().Encrypt(key, odd);
@@ -44,9 +45,9 @@ public class SplitEncryption extends Encryption {
 		byte encData[] = new byte[data.length];
 		for(int i=0; i < data.length; i++){
 			if(i%2 == 0)
-				encData[i] = even[i/2];
+				encData[i] = encEvenData[i/2];
 			else
-				encData[i] = odd[i/2];
+				encData[i] = encOddData[i/2];
 		}
 		return encData;
 	}
