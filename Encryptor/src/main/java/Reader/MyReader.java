@@ -117,7 +117,7 @@ public class MyReader implements InputOutputManager{
 	@Override
 	public void write(byte[] data) {
 		try {
-			os.write(data);
+			os.write(new String(data).getBytes());
 		} catch (IOException e) {
 			System.err.println("ERROR - got IO exception"
 					+ "in the OutputStream. the program will now treminate");
@@ -129,8 +129,9 @@ public class MyReader implements InputOutputManager{
 	
 	@Override
 	public void write(byte data) {
+		Byte b = new Byte(data);
 		try {
-			os.write(new Byte(data));
+			os.write(b.toString().getBytes());
 		} catch (IOException e) {
 			System.err.println("ERROR - got IO exception"
 					+ "in the OutputStream. the program will now treminate");
