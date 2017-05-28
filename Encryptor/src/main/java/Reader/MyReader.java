@@ -130,7 +130,7 @@ public class MyReader implements InputOutputManager{
 	@Override
 	public void write(byte data) {
 		try {
-			os.write(data);
+			os.write(new Byte(data));
 		} catch (IOException e) {
 			System.err.println("ERROR - got IO exception"
 					+ "in the OutputStream. the program will now treminate");
