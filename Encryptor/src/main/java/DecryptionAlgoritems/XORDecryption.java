@@ -1,8 +1,8 @@
 package DecryptionAlgoritems;
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @DecryptionClass(name = "XOR Decryption", serialNumber = 2, numberOfKeys = 1)
 public class XORDecryption extends Decryption{

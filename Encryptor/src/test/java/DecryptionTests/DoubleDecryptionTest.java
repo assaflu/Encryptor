@@ -13,9 +13,9 @@ import DecryptionAlgoritems.Decryption;
 import DecryptionAlgoritems.DoubleDecryption;
 import DecryptionAlgoritems.MWODecryption;
 import DecryptionAlgoritems.XORDecryption;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.EncryptionDecryptionManager;
 
 public class DoubleDecryptionTest {
 

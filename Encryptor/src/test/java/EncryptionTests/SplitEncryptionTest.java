@@ -12,9 +12,9 @@ import EncryptionAlgoritems.Encryption;
 import EncryptionAlgoritems.MWOEncryption;
 import EncryptionAlgoritems.SplitEncryption;
 import EncryptionAlgoritems.XOREncryption;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.EncryptionDecryptionManager;
 
 public class SplitEncryptionTest {
 

@@ -1,10 +1,10 @@
 package DecryptionAlgoritems;
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @DecryptionClass(name = "MWO Decryption", serialNumber = 3, numberOfKeys = 1)
 public class MWODecryption extends Decryption{

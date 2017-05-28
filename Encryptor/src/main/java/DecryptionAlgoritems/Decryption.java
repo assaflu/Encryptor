@@ -4,10 +4,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import Encryptor.Encryptor.AlgoritemManaging;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 public abstract class Decryption{
 	

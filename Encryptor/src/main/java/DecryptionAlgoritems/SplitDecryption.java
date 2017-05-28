@@ -2,12 +2,12 @@ package DecryptionAlgoritems;
 
 import java.util.ArrayList;
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @DecryptionClass(name = "Split Decryption", serialNumber = 6, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
 public class SplitDecryption extends Decryption{

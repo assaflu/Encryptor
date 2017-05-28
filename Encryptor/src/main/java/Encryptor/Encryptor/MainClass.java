@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
 
 /**
  * Hello world!

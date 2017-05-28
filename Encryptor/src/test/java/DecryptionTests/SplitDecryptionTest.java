@@ -11,9 +11,9 @@ import DecryptionAlgoritems.Decryption;
 import DecryptionAlgoritems.MWODecryption;
 import DecryptionAlgoritems.SplitDecryption;
 import DecryptionAlgoritems.XORDecryption;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.EncryptionDecryptionManager;
 
 public class SplitDecryptionTest {
 

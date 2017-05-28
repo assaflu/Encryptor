@@ -1,10 +1,10 @@
 package EncryptionAlgoritems;
 
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.EncryptionClass;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @EncryptionClass(name = "MWO Encryption", serialNumber = 3, numberOfKeys = 1)
 public class MWOEncryption extends Encryption{

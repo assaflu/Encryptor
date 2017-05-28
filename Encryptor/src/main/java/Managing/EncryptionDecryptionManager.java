@@ -1,10 +1,11 @@
-package Encryptor.Encryptor;
+package Managing;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import DecryptionAlgoritems.Decryption;
 import EncryptionAlgoritems.Encryption;
+import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 

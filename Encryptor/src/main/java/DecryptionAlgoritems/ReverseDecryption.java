@@ -3,12 +3,13 @@ package DecryptionAlgoritems;
 import java.util.ArrayList;
 
 import EncryptionAlgoritems.Encryption;
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
+import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @DecryptionClass(name = "Reverse Decryption", serialNumber = 5, numberOfKeys = 1, level = EncryptionDecryptionLevel.ADVANCE)
 public class ReverseDecryption extends Decryption {
@@ -24,8 +25,10 @@ public class ReverseDecryption extends Decryption {
 
 	@Override
 	public byte[] Decrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
+		manager.SetMode(WorkingMod.ENCRYPTION);
 		ArrayList<Class<? extends Encryption>> methods = 
 				manager.chooseBasicEncryptionAlgoritem(1);
+		manager.SetMode(WorkingMod.DECRYPTION);
 		try {
 			return methods.get(0).newInstance().Encrypt(key, data);
 		} catch (InstantiationException e) {

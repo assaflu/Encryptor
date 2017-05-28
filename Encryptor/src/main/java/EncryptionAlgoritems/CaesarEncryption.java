@@ -1,9 +1,9 @@
 package EncryptionAlgoritems;
 
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.EncryptionClass;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @EncryptionClass(name = "Caesar Encryption", serialNumber = 1, numberOfKeys = 1)
 public class CaesarEncryption extends Encryption{

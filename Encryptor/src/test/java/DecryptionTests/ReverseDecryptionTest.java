@@ -11,9 +11,9 @@ import DecryptionAlgoritems.ReverseDecryption;
 import EncryptionAlgoritems.Encryption;
 import EncryptionAlgoritems.MWOEncryption;
 import EncryptionAlgoritems.XOREncryption;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.EncryptionDecryptionManager;
 
 public class ReverseDecryptionTest {
 

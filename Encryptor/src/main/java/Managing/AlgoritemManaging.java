@@ -1,9 +1,10 @@
-package Encryptor.Encryptor;
+package Managing;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,14 @@ import org.reflections.util.ConfigurationBuilder;
 
 import DecryptionAlgoritems.Decryption;
 import EncryptionAlgoritems.Encryption;
+import Encryptor.Encryptor.DecryptionClass;
+import Encryptor.Encryptor.EncryptionClass;
+import Encryptor.Encryptor.EncryptionDecryptionLevel;
+import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Reader.InputOutputManager;
+import Reader.MyReader;
 
 
 public class AlgoritemManaging implements EncryptionDecryptionManager {
@@ -32,6 +39,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	protected WorkingMod mode;
 	private Clock clock;
 	private long time;
+	private InputOutputManager reader;
 	
 	public static final AlgoritemManaging instance = new AlgoritemManaging();
 	
@@ -41,24 +49,26 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		encryptionMethods = new HashMap<Integer, Class<? extends Encryption>>();
 		decryptionMethods = new HashMap<Integer, Class<? extends Decryption>>();
 		clock = Clock.systemDefaultZone();
+		reader = new MyReader(System.in,System.out);
 	}
 	
 	private void endProcess(){
 		time = clock.millis() - time;
-		System.out.println(AlgoritemOptions.get(choosenMethod)+" ended");
-		System.out.println("time to execute is "+ time + " millisecond");
+		reader.write(AlgoritemOptions.get(choosenMethod)+" ended\n");
+		reader.write("time to execute is "+ time + " millisecond\n");
 	}
 	
 	private void startProcess(){
 		time = clock.millis();
-		System.out.println(AlgoritemOptions.get(choosenMethod)+" started");
+		reader.write(AlgoritemOptions.get(choosenMethod)+" started\n");
 	}
 	
 	private void printOptions (){
 		Iterator<Integer> it = AlgoritemOptions.keySet().iterator();
 		while(it.hasNext()){
 			Integer entry = it.next();
-			System.out.println(entry+". "+AlgoritemOptions.get(entry));
+			reader.write(entry+". "+AlgoritemOptions.get(entry));
+			reader.write("\n");
 		}
 	}
 	
@@ -69,19 +79,15 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		return key;
 	}
 	
-	private byte[] loadData (Path filePath) throws IOException{
-		return Files.readAllBytes(filePath);
+	private byte[] loadData (Path filePath){
+		return reader.readFile(filePath);
 	}
 	
-	private void saveData (Path filePath, byte[] data) throws IOException{
+	private void saveData (Path filePath, byte[] data){
 		String savePath = filePath.toString();
-		FileOutputStream out;
 		switch (this.mode){
 		case ENCRYPTION:
 			savePath = savePath.concat(".encrypted");
-			out = new FileOutputStream(savePath.toString());
-			out.write(data);
-			out.close();
 			break;
 		case DECRYPTION:
 			String [] extention = savePath.split("\\.");
@@ -91,11 +97,17 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 			else{
 				savePath = savePath.concat("_decd."+extention[extention.length-1]);
 			}
-			out = new FileOutputStream(savePath.toString());
-			out.write(data);
-			out.close();
 		break;
 		}
+		reader.saveFile(Paths.get(savePath), data);
+	}
+	
+	public void SetInputStream (InputStream is){
+		((MyReader) reader).SetInputStream(is);
+	}
+	
+	public void SetOutputStream (OutputStream os){
+		((MyReader) reader).SetOutputStream(os);
 	}
 	
 	public void SetMode(WorkingMod mode){
@@ -128,22 +140,24 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	}
 	
 	public void chooseAlgoritem(){
-		System.out.println("choose your algoritem:");
+		boolean visit = false;
+		reader.write("choose your algoritem:\n");
 		printOptions();
-    	@SuppressWarnings("resource")
-		Scanner reader = new Scanner (System.in);
     	String userInput = null;
     	boolean correctInput = false;
     	while(!correctInput){            	
-        	userInput = reader.nextLine();
+        	userInput = reader.readString(1);
         	try{
         		correctInput = Integer.parseInt(userInput)<=AlgoritemOptions.size() && Integer.parseInt(userInput)>0;
-        		if(!correctInput) System.out.println("index out of range, enter again");
+        	}catch(NumberFormatException e){
+        		if(!visit){
+        			visit = true;
+            		reader.write("choose a number between 1 to "+AlgoritemOptions.size()+"\n");
+            		correctInput=false;
+        		}
         	}
-        	catch(NumberFormatException e){
-        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
-        		correctInput=false;
-        	}
+        	if(!correctInput && !visit) reader.write("index out of range, enter again\n");
+        	visit = false;
     	}
     	choosenMethod = Integer.parseInt(userInput);
 	}
@@ -164,28 +178,26 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		}
 		
 		it = basicAlgoritems.keySet().iterator();
-		System.out.println("Choose " +numberOfAlgoritems+" from these basic Algoritem:");
+		reader.write("Choose " +numberOfAlgoritems+" from these basic Algoritem:\n");
 		while(it.hasNext()){
 			Integer entry = it.next();
-			System.out.println(entry+". "+basicAlgoritems.get(entry));
+			reader.write(entry+". "+basicAlgoritems.get(entry)+"\n");
 		}
 		
 		for(int i=0; i<numberOfAlgoritems; i++){
-			@SuppressWarnings("resource")
-			Scanner reader = new Scanner (System.in);
 	    	String userInput = null;
 	    	boolean correctInput = false;
 	    	while(!correctInput){            	
-	        	userInput = reader.nextLine();
+	        	userInput = reader.readString(1);
 	        	try{
 	        		correctInput = basicAlgoritems.get(Integer.parseInt(userInput)) != null;
 	        		if(!correctInput)
-	        			System.out.println("unmatching index");
+	        			reader.write("unmatching index\n");
 	        		else
 	        			methodsToReturn.add(encryptionMethods.get(Integer.parseInt(userInput)));
 	        	}
 	        	catch(NumberFormatException e){
-	        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
+	        		reader.write("choose a number between 1 to "+AlgoritemOptions.size()+"\n");
 	        		correctInput=false;
 	        	}
 	    	}
@@ -205,28 +217,26 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		}
 		
 		it = basicAlgoritems.keySet().iterator();
-		System.out.println("Choose "+numberOfAlgoritems+" from these basic Algoritem:");
+		reader.write("Choose "+numberOfAlgoritems+" from these basic Algoritem:\n");
 		while(it.hasNext()){
 			Integer entry = it.next();
-			System.out.println(entry+". "+basicAlgoritems.get(entry));
+			reader.write(entry+". "+basicAlgoritems.get(entry)+"\n");
 		}
 		
 		for(int i=0; i<numberOfAlgoritems; i++){
-			@SuppressWarnings("resource")
-			Scanner reader = new Scanner (System.in);
 	    	String userInput = null;
 	    	boolean correctInput = false;
 	    	while(!correctInput){            	
-	        	userInput = reader.nextLine();
+	        	userInput = reader.readString(1);
 	        	try{
 	        		correctInput = basicAlgoritems.get(Integer.parseInt(userInput)) != null;
 	        		if(!correctInput)
-	        			System.out.println("unmatching index");
+	        			reader.write("unmatching index\n");
 	        		else
 	        			methodsToReturn.add(decryptionMethods.get(Integer.parseInt(userInput)));
 	        	}
 	        	catch(NumberFormatException e){
-	        		System.out.println("choose a number between 1 to "+AlgoritemOptions.size());
+	        		reader.write("choose a number between 1 to "+AlgoritemOptions.size()+"\n");
 	        		correctInput=false;
 	        	}
 	    	}
@@ -237,8 +247,6 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
-		@SuppressWarnings("resource")
-		Scanner reader = new Scanner (System.in);
 		byte data [] = null;
 		byte[] keys = null;
 		int numberOfKeys = 0;
@@ -246,18 +254,19 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		case ENCRYPTION:
 			numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
 			keys = keyGenerate(numberOfKeys);
-			System.out.println("The keys are:");
+			reader.write("The keys are:\n");
 			for(byte b : keys){
-				System.out.println(b);
+				reader.write(b);
+				reader.write("\n");
 			}
 			data = encryptionMethods.get(choosenMethod).newInstance().Encrypt(keys, loadData(filePath));
 			break;
 		case DECRYPTION:
 			numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
 			keys = new byte [numberOfKeys];
-			System.out.println("Enter "+numberOfKeys+ " keys:");
+			reader.write("Enter "+numberOfKeys+ " keys:\n");
 			for(int i=0; i<numberOfKeys; i++){
-				keys[i] = reader.nextByte();
+				keys[i] = reader.read(1)[0];
 			}
 			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(keys, loadData(filePath));
 			break;

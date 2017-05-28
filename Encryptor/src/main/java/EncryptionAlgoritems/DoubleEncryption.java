@@ -3,12 +3,12 @@ package EncryptionAlgoritems;
 
 import java.util.ArrayList;
 
-import Encryptor.Encryptor.AlgoritemManaging;
 import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 @EncryptionClass(name = "Double Encryption", serialNumber = 4, numberOfKeys = 2,
 				level = EncryptionDecryptionLevel.ADVANCE)

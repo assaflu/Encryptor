@@ -12,9 +12,9 @@ import DecryptionAlgoritems.Decryption;
 import DecryptionAlgoritems.MWODecryption;
 import DecryptionAlgoritems.XORDecryption;
 import EncryptionAlgoritems.ReverseEncryption;
-import Encryptor.Encryptor.EncryptionDecryptionManager;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
+import Managing.EncryptionDecryptionManager;
 
 public class ReverseEncryptionTest {
 
