@@ -2,12 +2,11 @@ package EncryptionAlgoritems;
 
 
 import Encryptor.Encryptor.EncryptionClass;
-import Managing.AlgoritemManaging;
-import Managing.EncryptionDecryptionManager;
+
 
 @EncryptionClass(name = "Caesar Encryption", serialNumber = 1, numberOfKeys = 1)
 public class CaesarEncryption extends Encryption{
-
+/*
 	public CaesarEncryption() {
 		super(AlgoritemManaging.instance);
 		// TODO Auto-generated constructor stub
@@ -17,7 +16,7 @@ public class CaesarEncryption extends Encryption{
 		super(manager);
 		// TODO Auto-generated constructor stub
 	}
-
+*/
 	@Override
 	public byte[] Encrypt(byte [] key, byte[] data) {
 		byte encryptedData [] = new byte [data.length];		

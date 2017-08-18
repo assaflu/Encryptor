@@ -7,19 +7,19 @@ import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
 @EncryptionClass(name = "Double Encryption", serialNumber = 4, numberOfKeys = 2,
 				level = EncryptionDecryptionLevel.ADVANCE)
 public class DoubleEncryption extends Encryption{
 
+	private EncryptionDecryptionManager manager;
 	public DoubleEncryption(){
-		super(AlgoritemManaging.instance);
+		//super(AlgoritemManaging.instance);
 	}
 	
 	public DoubleEncryption(EncryptionDecryptionManager manager) {
-		super(manager);
+		this.manager = manager;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import Managing.EncryptionDecryptionManager;
 
 public abstract class Encryption{
 
+	
 	protected EncryptionDecryptionManager manager;
 	
 	public Encryption(){

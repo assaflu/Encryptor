@@ -3,20 +3,20 @@ package EncryptionAlgoritems;
 
 import Encryptor.Encryptor.EncryptionClass;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
-import Managing.EncryptionDecryptionManager;
 
 @EncryptionClass(name = "MWO Encryption", serialNumber = 3, numberOfKeys = 1)
 public class MWOEncryption extends Encryption{
-
-	public MWOEncryption(){
+	/*
+	public CaesarEncryption() {
 		super(AlgoritemManaging.instance);
+		// TODO Auto-generated constructor stub
 	}
 	
-	public MWOEncryption(EncryptionDecryptionManager manager) {
+	public CaesarEncryption(EncryptionDecryptionManager manager) {
 		super(manager);
 		// TODO Auto-generated constructor stub
 	}
+*/
 
 	@Override
 	public byte[] Encrypt(byte [] key, byte[] data) throws IllegalKeyException {
