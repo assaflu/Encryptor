@@ -18,35 +18,13 @@ public class MainClass
     public static void main( String[] args )
     {
     	Scanner reader = new Scanner (System.in);
-    	String userInput;
+    	String userInput = null;
     	boolean flag = true;
     	System.out.println("Welcome to the Encryption and Decryption application");
-    	while(flag){
-            System.out.println("Choose your operation:");
-            System.out.println("1.\tEncrypt file");
-            System.out.println("2.\tDecrypt file");
-            userInput = reader.nextLine();
-            if(userInput.length() != 1 ){
-            	System.out.println("You should enter a number 1 for Encryption and 2 for Decryption\n");
-            	continue;
-            }
-            switch (userInput) {
-			case "1":
-				System.out.println("You choose encryption");
-				AlgoritemManaging.instance.SetMode(WorkingMod.ENCRYPTION);
-				flag = false;
-				break;
-			case "2":
-				System.out.println("You choose decryption");
-				AlgoritemManaging.instance.SetMode(WorkingMod.DECRYPTION);
-				flag=false;
-				break;
-			default:
-				System.out.println("Worng Input try again\n");
-				break;
-			}
-            
-    	}
+    	
+    	SetInput(reader, userInput);
+    	SetMode(reader,userInput);
+    	
     	AlgoritemManaging.instance.chooseAlgoritem();
     	System.out.println("enter file path: ");
     	userInput = reader.nextLine();
@@ -80,5 +58,65 @@ public class MainClass
 		}
 		System.out.println("done");  
 		reader.close();
+    }
+    
+    public static void SetInput(Scanner reader, String userInput){
+    	boolean flag = true;
+    	while(flag){
+            System.out.println("Choose your input plan:");
+            System.out.println("1.\tFile");
+            System.out.println("2.\tFolder");
+            userInput = reader.nextLine();
+            if(userInput.length() != 1 ){
+            	System.out.println("You should enter a number 1 for Filer and 2 for Folder\n");
+            	continue;
+            }
+            switch (userInput) {
+			case "1":
+				System.out.println("You choose encryption");
+				AlgoritemManaging.instance.SetInputMode(InputMod.File);
+				flag = false;
+				break;
+			case "2":
+				System.out.println("You choose decryption");
+				AlgoritemManaging.instance.SetInputMode(InputMod.Folder);
+				flag=false;
+				break;
+			default:
+				System.out.println("Worng Input try again\n");
+				break;
+			}
+            
+    	}
+    }
+    
+    public static void SetMode(Scanner reader, String userInput){
+    	boolean flag = true;
+    	while(flag){
+            System.out.println("Choose your operation:");
+            System.out.println("1.\tEncrypt file");
+            System.out.println("2.\tDecrypt file");
+            userInput = reader.nextLine();
+            if(userInput.length() != 1 ){
+            	System.out.println("You should enter a number 1 for Encryption and 2 for Decryption\n");
+            	continue;
+            }
+            switch (userInput) {
+			case "1":
+				System.out.println("You choose encryption");
+				AlgoritemManaging.instance.SetMode(WorkingMod.ENCRYPTION);
+				flag = false;
+				break;
+			case "2":
+				System.out.println("You choose decryption");
+				AlgoritemManaging.instance.SetMode(WorkingMod.DECRYPTION);
+				flag=false;
+				break;
+			default:
+				System.out.println("Worng Input try again\n");
+				break;
+			}
+            
+    	}
     }
 }

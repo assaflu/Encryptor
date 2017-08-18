@@ -22,6 +22,7 @@ import EncryptionAlgoritems.Encryption;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
+import Encryptor.Encryptor.InputMod;
 import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
@@ -36,6 +37,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	protected Map<Integer, Class<? extends Decryption>> decryptionMethods;
 	protected int choosenMethod;
 	protected WorkingMod mode;
+	protected InputMod inputMod;
 	private Clock clock;
 	private long time;
 	private InputOutputManager reader;
@@ -107,6 +109,12 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	
 	public void SetOutputStream (OutputStream os){
 		((MyReader) reader).SetOutputStream(os);
+	}
+	
+	@Override
+	public void SetInputMode(InputMod mode) {
+		this.inputMod = mode;
+		
 	}
 	
 	public void SetMode(WorkingMod mode){
@@ -274,4 +282,5 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		endProcess();
 		choosenMethod=0;
 	}
+
 }

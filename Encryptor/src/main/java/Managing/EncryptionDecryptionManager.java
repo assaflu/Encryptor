@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import DecryptionAlgoritems.Decryption;
 import EncryptionAlgoritems.Encryption;
+import Encryptor.Encryptor.InputMod;
 import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
@@ -12,6 +13,8 @@ import Exceptions.IllegalKeyException;
 public interface EncryptionDecryptionManager {
 	
 	public void SetMode(WorkingMod mode);
+	
+	public void SetInputMode(InputMod mode);
 	
 	public void chooseAlgoritem();
 	
