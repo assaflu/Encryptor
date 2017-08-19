@@ -1,15 +1,14 @@
 package DecryptionAlgoritems;
 
 import Encryptor.Encryptor.DecryptionClass;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
-@DecryptionClass(name = "XOR Decryption", serialNumber = 2, numberOfKeys = 1)
+@DecryptionClass(name = "XOR Decryption", serialNumber = 2, numberOfKeys = 1,type = DecryptionType.XORDecryption)
 public class XORDecryption extends Decryption{
 
-	public XORDecryption(){
+	/*public XORDecryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public XORDecryption(EncryptionDecryptionManager manager) {
 		super(manager);

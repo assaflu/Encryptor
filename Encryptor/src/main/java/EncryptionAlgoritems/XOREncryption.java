@@ -1,21 +1,22 @@
 package EncryptionAlgoritems;
 
 import Encryptor.Encryptor.EncryptionClass;
+import Managing.EncryptionDecryptionManager;
 
 
-@EncryptionClass(name = "XOR Encryption",serialNumber = 2, numberOfKeys = 1)
+@EncryptionClass(name = "XOR Encryption",serialNumber = 2, numberOfKeys = 1,type = EncryptionType.XOREncryption)
 public class XOREncryption extends Encryption{
 	/*
 	public CaesarEncryption() {
 		super(AlgoritemManaging.instance);
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 	
-	public CaesarEncryption(EncryptionDecryptionManager manager) {
+	public XOREncryption(EncryptionDecryptionManager manager) {
 		super(manager);
 		// TODO Auto-generated constructor stub
 	}
-*/
+
 	@Override
 	public byte[] Encrypt(byte [] key, byte[] data) {
 		byte encryptedData [] = new byte [data.length];

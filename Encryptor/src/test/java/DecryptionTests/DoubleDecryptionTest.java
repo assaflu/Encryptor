@@ -8,11 +8,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import DecryptionAlgoritems.CaesarDecryption;
-import DecryptionAlgoritems.Decryption;
+import DecryptionAlgoritems.DecryptionType;
 import DecryptionAlgoritems.DoubleDecryption;
-import DecryptionAlgoritems.MWODecryption;
-import DecryptionAlgoritems.XORDecryption;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 import Managing.EncryptionDecryptionManager;
@@ -22,9 +19,9 @@ public class DoubleDecryptionTest {
 	@Test(expected = IllegalKeyException.class)
 	public void testException() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
-		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
-		arr.add(CaesarDecryption.class);
-		arr.add(MWODecryption.class);		
+		ArrayList<DecryptionType> arr = new ArrayList<>();
+		arr.add(DecryptionType.CaesarDecryption);
+		arr.add(DecryptionType.MWODecryption);		
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
 		Mockito.when(m.chooseBasicDecryptionAlgoritem(2)).thenReturn(arr);
 		DoubleDecryption c = new DoubleDecryption(m);
@@ -39,9 +36,9 @@ public class DoubleDecryptionTest {
 	@Test
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
-		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
-		arr.add(CaesarDecryption.class);
-		arr.add(XORDecryption.class);		
+		ArrayList<DecryptionType> arr = new ArrayList<>();
+		arr.add(DecryptionType.CaesarDecryption);
+		arr.add(DecryptionType.XORDecryption);		
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
 		Mockito.when(m.chooseBasicDecryptionAlgoritem(2)).thenReturn(arr);
 		DoubleDecryption c = new DoubleDecryption(m);

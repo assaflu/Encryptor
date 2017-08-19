@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import DecryptionAlgoritems.Decryption;
-import DecryptionAlgoritems.MWODecryption;
-import DecryptionAlgoritems.XORDecryption;
+import DecryptionAlgoritems.DecryptionType;
 import EncryptionAlgoritems.ReverseEncryption;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
@@ -21,8 +19,8 @@ public class ReverseEncryptionTest {
 	@Test(expected = IllegalKeyException.class)
 	public void testException() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
-		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
-		arr.add(MWODecryption.class);		
+		ArrayList<DecryptionType> arr = new ArrayList<>();
+		arr.add(DecryptionType.MWODecryption);		
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
 		Mockito.when(m.chooseBasicDecryptionAlgoritem(1)).thenReturn(arr);
 		ReverseEncryption c = new ReverseEncryption(m);
@@ -37,8 +35,8 @@ public class ReverseEncryptionTest {
 	@Test
 	public void testSimple() throws IOException, URISyntaxException, IllegalKeyException, DecryptionKeyIllegal{
 		byte data [] = {97,98,99,100};
-		ArrayList<Class<? extends Decryption>> arr = new ArrayList<>();
-		arr.add(XORDecryption.class);			
+		ArrayList<DecryptionType> arr = new ArrayList<>();
+		arr.add(DecryptionType.XORDecryption);			
 		EncryptionDecryptionManager m = Mockito.mock(EncryptionDecryptionManager.class);
 		Mockito.when(m.chooseBasicDecryptionAlgoritem(1)).thenReturn(arr);
 		ReverseEncryption c = new ReverseEncryption(m);

@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import DecryptionAlgoritems.Decryption;
-import EncryptionAlgoritems.Encryption;
+import DecryptionAlgoritems.DecryptionType;
+import EncryptionAlgoritems.EncryptionType;
 import Encryptor.Encryptor.InputMod;
 import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
@@ -20,9 +20,9 @@ public interface EncryptionDecryptionManager {
 	
 	public int getChosenMethod();
 	
-	public ArrayList<Class<? extends Encryption>> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems);
+	public ArrayList<EncryptionType> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems);
 	
-	public ArrayList<Class<? extends Decryption>> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems);
+	public ArrayList<DecryptionType> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems);
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal;
 }

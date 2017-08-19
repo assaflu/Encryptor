@@ -6,15 +6,14 @@ import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
-@EncryptionClass(name = "Split Encryption", serialNumber = 6, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
+@EncryptionClass(name = "Split Encryption", serialNumber = 6, numberOfKeys = 2, type = EncryptionType.SplitEncryption, level = EncryptionDecryptionLevel.ADVANCE)
 public class SplitEncryption extends Encryption {
 
-	public SplitEncryption(){
+	/*public SplitEncryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public SplitEncryption(EncryptionDecryptionManager manager) {
 		super(manager);
@@ -23,8 +22,9 @@ public class SplitEncryption extends Encryption {
 
 	@Override
 	public byte[] Encrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
-		ArrayList<Class<? extends Encryption>> methods = 
+		ArrayList<EncryptionType> methods = 
 				manager.chooseBasicEncryptionAlgoritem(1);
+		Encryption encryptor = new EncryptionFactory().create(methods.get(0), manager);
 		
 		byte even [] = new byte [data.length/2];
 		byte odd [] = null;
@@ -44,16 +44,8 @@ public class SplitEncryption extends Encryption {
 		byte encOddData[] = null;
 		byte [] firstKey = {key[0]};
 		byte [] secondKey = {key[1]};
-		try {
-			encEvenData = methods.get(0).newInstance().Encrypt(firstKey, even);
-			encOddData= methods.get(0).newInstance().Encrypt(secondKey, odd);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		encEvenData = encryptor.Encrypt(firstKey, even);
+		encOddData= encryptor.Encrypt(secondKey, odd);
 		
 		byte encData[] = new byte[data.length];
 		for(int i=0; i < data.length; i++){

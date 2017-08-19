@@ -1,16 +1,15 @@
 package DecryptionAlgoritems;
 
 import Encryptor.Encryptor.DecryptionClass;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
 
-@DecryptionClass(name = "Caesar Decryption", serialNumber = 1, numberOfKeys = 1)
+@DecryptionClass(name = "Caesar Decryption", serialNumber = 1, numberOfKeys = 1, type = DecryptionType.CaesarDecryption)
 public class CaesarDecryption extends Decryption {
 
-	public CaesarDecryption(){
+	/*public CaesarDecryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public CaesarDecryption(EncryptionDecryptionManager manager) {
 		super(manager);

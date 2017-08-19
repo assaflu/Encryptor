@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
 import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 /**
  * Hello world!
@@ -17,15 +19,16 @@ public class MainClass
 {
     public static void main( String[] args )
     {
-    	Scanner reader = new Scanner (System.in);
+    	Scanner reader = new Scanner(System.in);
     	String userInput = null;
     	boolean flag = true;
     	System.out.println("Welcome to the Encryption and Decryption application");
+    	EncryptionDecryptionManager manager = new AlgoritemManaging();
     	
-    	SetInput(reader, userInput);
-    	SetMode(reader,userInput);
-    	
-    	AlgoritemManaging.instance.chooseAlgoritem();
+    	SetInputType(reader,manager);
+    	SetMode(reader,manager);
+    	//AlgoritemManaging.instance.chooseAlgoritem();
+    	manager.chooseAlgoritem();
     	System.out.println("enter file path: ");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
@@ -39,7 +42,7 @@ public class MainClass
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
         try {
-			AlgoritemManaging.instance.executeMethod(Paths.get(userInput));
+			manager.executeMethod(Paths.get(userInput));
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,8 +63,9 @@ public class MainClass
 		reader.close();
     }
     
-    public static void SetInput(Scanner reader, String userInput){
+    public static void SetInputType(Scanner reader, EncryptionDecryptionManager manager){
     	boolean flag = true;
+    	String userInput;
     	while(flag){
             System.out.println("Choose your input plan:");
             System.out.println("1.\tFile");
@@ -73,25 +77,26 @@ public class MainClass
             }
             switch (userInput) {
 			case "1":
-				System.out.println("You choose encryption");
-				AlgoritemManaging.instance.SetInputMode(InputMod.File);
+				System.out.println("You choose File");
+				manager.SetInputMode(InputMod.File);
 				flag = false;
 				break;
 			case "2":
-				System.out.println("You choose decryption");
-				AlgoritemManaging.instance.SetInputMode(InputMod.Folder);
+				System.out.println("You choose Folder");
+				manager.SetInputMode(InputMod.Folder);
 				flag=false;
 				break;
 			default:
-				System.out.println("Worng Input try again\n");
+				System.out.println("Worng input try again\n");
 				break;
 			}
             
     	}
     }
     
-    public static void SetMode(Scanner reader, String userInput){
+    public static void SetMode(Scanner reader, EncryptionDecryptionManager manager){
     	boolean flag = true;
+    	String userInput;
     	while(flag){
             System.out.println("Choose your operation:");
             System.out.println("1.\tEncrypt file");
@@ -104,12 +109,12 @@ public class MainClass
             switch (userInput) {
 			case "1":
 				System.out.println("You choose encryption");
-				AlgoritemManaging.instance.SetMode(WorkingMod.ENCRYPTION);
+				manager.SetMode(WorkingMod.ENCRYPTION);
 				flag = false;
 				break;
 			case "2":
 				System.out.println("You choose decryption");
-				AlgoritemManaging.instance.SetMode(WorkingMod.DECRYPTION);
+				manager.SetMode(WorkingMod.DECRYPTION);
 				flag=false;
 				break;
 			default:

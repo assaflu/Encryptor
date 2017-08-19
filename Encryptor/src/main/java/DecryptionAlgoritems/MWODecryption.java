@@ -3,15 +3,14 @@ package DecryptionAlgoritems;
 import Encryptor.Encryptor.DecryptionClass;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
-@DecryptionClass(name = "MWO Decryption", serialNumber = 3, numberOfKeys = 1)
+@DecryptionClass(name = "MWO Decryption", serialNumber = 3, numberOfKeys = 1,type = DecryptionType.MWODecryption)
 public class MWODecryption extends Decryption{
 	
-	public MWODecryption(){
+	/*public MWODecryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public MWODecryption(EncryptionDecryptionManager manager) {
 		super(manager);

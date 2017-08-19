@@ -18,7 +18,11 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import DecryptionAlgoritems.Decryption;
+import DecryptionAlgoritems.DecryptionFactory;
+import DecryptionAlgoritems.DecryptionType;
 import EncryptionAlgoritems.Encryption;
+import EncryptionAlgoritems.EncryptionFactory;
+import EncryptionAlgoritems.EncryptionType;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
@@ -42,9 +46,9 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	private long time;
 	private InputOutputManager reader;
 	
-	public static final AlgoritemManaging instance = new AlgoritemManaging();
+	//public static final AlgoritemManaging instance = new AlgoritemManaging();
 	
-	protected AlgoritemManaging(){
+	public AlgoritemManaging(){
 		choosenMethod=0;
 		AlgoritemOptions = new HashMap<Integer, String>();
 		encryptionMethods = new HashMap<Integer, Class<? extends Encryption>>();
@@ -173,9 +177,9 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		return choosenMethod;
 	}
 	
-	public ArrayList<Class<? extends Encryption>> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems){
+	public ArrayList<EncryptionType> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems){
 		
-		ArrayList<Class<? extends Encryption>> methodsToReturn = new ArrayList<Class<? extends Encryption>>();
+		ArrayList<EncryptionType> methodsToReturn = new ArrayList<>();
 		Iterator<Integer> it = encryptionMethods.keySet().iterator();
 		Map<Integer, String> basicAlgoritems = new HashMap<Integer, String>();
 		while(it.hasNext()){
@@ -201,7 +205,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	        		if(!correctInput)
 	        			reader.write("unmatching index\n");
 	        		else
-	        			methodsToReturn.add(encryptionMethods.get(Integer.parseInt(userInput)));
+	        			methodsToReturn.add(encryptionMethods.get(Integer.parseInt(userInput)).getDeclaredAnnotation(EncryptionClass.class).type());
 	        	}
 	        	catch(NumberFormatException e){
 	        		reader.write("choose a number between 1 to "+AlgoritemOptions.size()+"\n");
@@ -213,8 +217,8 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		return methodsToReturn;
 	}
 	
-	public ArrayList<Class<? extends Decryption>> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems){
-		ArrayList<Class<? extends Decryption>> methodsToReturn = new ArrayList<Class<? extends Decryption>>();
+	public ArrayList<DecryptionType> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems){
+		ArrayList<DecryptionType> methodsToReturn = new ArrayList<>();
 		Iterator<Integer> it = decryptionMethods.keySet().iterator();
 		Map<Integer, String> basicAlgoritems = new HashMap<Integer, String>();
 		while(it.hasNext()){
@@ -240,7 +244,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	        		if(!correctInput)
 	        			reader.write("unmatching index\n");
 	        		else
-	        			methodsToReturn.add(decryptionMethods.get(Integer.parseInt(userInput)));
+	        			methodsToReturn.add(decryptionMethods.get(Integer.parseInt(userInput)).getDeclaredAnnotation(DecryptionClass.class).type());
 	        	}
 	        	catch(NumberFormatException e){
 	        		reader.write("choose a number between 1 to "+AlgoritemOptions.size()+"\n");
@@ -260,22 +264,26 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		switch (this.mode){
 		case ENCRYPTION:
 			numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
+			EncryptionType typeE = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).type();
 			keys = keyGenerate(numberOfKeys);
 			reader.write("The keys are:\n");
 			for(byte b : keys){
 				reader.write(b);
 				reader.write("\n");
 			}
-			data = encryptionMethods.get(choosenMethod).newInstance().Encrypt(keys, loadData(filePath));
+			Encryption encryptor = new EncryptionFactory().create(typeE,this);
+			data = encryptor.Encrypt(keys, loadData(filePath));
 			break;
 		case DECRYPTION:
 			numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
+			DecryptionType typeD = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).type();
 			keys = new byte [numberOfKeys];
 			reader.write("Enter "+numberOfKeys+ " keys:\n");
 			for(int i=0; i<numberOfKeys; i++){
 				keys[i] = reader.read(1)[0];
 			}
-			data = decryptionMethods.get(choosenMethod).newInstance().Decrypt(keys, loadData(filePath));
+			Decryption decryptor = new DecryptionFactory().create(typeD,this);
+			data = decryptor.Decrypt(keys, loadData(filePath));
 			break;
 		}
 		saveData(filePath, data);

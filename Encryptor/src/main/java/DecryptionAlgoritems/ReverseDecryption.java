@@ -2,21 +2,21 @@ package DecryptionAlgoritems;
 
 import java.util.ArrayList;
 
-import EncryptionAlgoritems.Encryption;
+import EncryptionAlgoritems.EncryptionFactory;
+import EncryptionAlgoritems.EncryptionType;
 import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
 import Encryptor.Encryptor.WorkingMod;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
-@DecryptionClass(name = "Reverse Decryption", serialNumber = 5, numberOfKeys = 1, level = EncryptionDecryptionLevel.ADVANCE)
+@DecryptionClass(name = "Reverse Decryption", serialNumber = 5, numberOfKeys = 1,type = DecryptionType.ReverseDecryption, level = EncryptionDecryptionLevel.ADVANCE)
 public class ReverseDecryption extends Decryption {
 
-	public ReverseDecryption(){
+	/*public ReverseDecryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public ReverseDecryption(EncryptionDecryptionManager manager) {
 		super(manager);
@@ -26,19 +26,10 @@ public class ReverseDecryption extends Decryption {
 	@Override
 	public byte[] Decrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
 		manager.SetMode(WorkingMod.ENCRYPTION);
-		ArrayList<Class<? extends Encryption>> methods = 
+		ArrayList<EncryptionType> methods = 
 				manager.chooseBasicEncryptionAlgoritem(1);
 		manager.SetMode(WorkingMod.DECRYPTION);
-		try {
-			return methods.get(0).newInstance().Encrypt(key, data);
-		} catch (InstantiationException e) {
-			System.out.println("Could not annitiate encryption class");
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			System.out.println("Could not access encryption class");
-			e.printStackTrace();
-		}
-		return null;
+		return new EncryptionFactory().create(methods.get(0),manager).Encrypt(key, data);
 	}
 
 }

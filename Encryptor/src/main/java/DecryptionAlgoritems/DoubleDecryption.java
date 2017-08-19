@@ -6,15 +6,14 @@ import Encryptor.Encryptor.DecryptionClass;
 import Encryptor.Encryptor.EncryptionDecryptionLevel;
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
-@DecryptionClass(name = "Double Decryption", serialNumber = 4, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE)
+@DecryptionClass(name = "Double Decryption", serialNumber = 4, numberOfKeys = 2, level = EncryptionDecryptionLevel.ADVANCE, type = DecryptionType.DoubleDecryption)
 public class DoubleDecryption extends Decryption{
 
-	public DoubleDecryption(){
+	/*public DoubleDecryption(){
 		super(AlgoritemManaging.instance);
-	}
+	}*/
 	
 	public DoubleDecryption(EncryptionDecryptionManager manager) {
 		super(manager);
@@ -23,23 +22,18 @@ public class DoubleDecryption extends Decryption{
 
 	@Override
 	public byte[] Decrypt(byte[] key, byte[] data) throws IllegalKeyException, DecryptionKeyIllegal {
-		ArrayList<Class<? extends Decryption>> methods = 
+		ArrayList<DecryptionType> methods = 
 				manager.chooseBasicDecryptionAlgoritem(2);
 		byte firstKey[],secondKey[];
 		firstKey = new byte [1];
 		firstKey[0] = key[0];
 		secondKey = new byte [1];
 		secondKey[0] = key[1];
-		try {
-			return methods.get(1).newInstance().Decrypt(secondKey,methods.get(0).newInstance().Decrypt(firstKey, data));
-		} catch (InstantiationException e) {
-			System.out.println("Could not annitiate decryption class");
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			System.out.println("Could not access decryption class");
-			e.printStackTrace();
-		}
-		return null;
+		DecryptionFactory factory = new DecryptionFactory();
+		Decryption first,second;
+		first = factory.create(methods.get(0),manager);
+		second = factory.create(methods.get(1), manager);
+		return second.Decrypt(secondKey, first.Decrypt(firstKey, data));
 	}
 
 

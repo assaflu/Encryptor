@@ -5,13 +5,16 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 import EncryptionAlgoritems.CaesarEncryption;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 public class CaserEncryptiontest {
 
 	@Test
 	public void testSimple() throws IOException, URISyntaxException{
 		byte data [] = {97,98,99,100};
-		CaesarEncryption c = new CaesarEncryption();
+		EncryptionDecryptionManager man = new AlgoritemManaging();
+		CaesarEncryption c = new CaesarEncryption(man);
 		byte [] keys = {50};
 		byte[] encData = c.Encrypt(keys,data);
 		assert encData [0] == (byte)(97+50);

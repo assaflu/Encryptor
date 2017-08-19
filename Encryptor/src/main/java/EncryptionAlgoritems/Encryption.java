@@ -6,7 +6,6 @@ import java.nio.file.Path;
 
 import Exceptions.DecryptionKeyIllegal;
 import Exceptions.IllegalKeyException;
-import Managing.AlgoritemManaging;
 import Managing.EncryptionDecryptionManager;
 
 public abstract class Encryption{
@@ -14,9 +13,9 @@ public abstract class Encryption{
 	
 	protected EncryptionDecryptionManager manager;
 	
-	public Encryption(){
+	/*public Encryption(){
 		manager = AlgoritemManaging.instance;
-	}
+	}*/
 	
 	public Encryption (EncryptionDecryptionManager manager){
 		this.manager = manager;

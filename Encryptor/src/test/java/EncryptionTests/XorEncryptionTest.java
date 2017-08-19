@@ -7,13 +7,16 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 import EncryptionAlgoritems.XOREncryption;
+import Managing.AlgoritemManaging;
+import Managing.EncryptionDecryptionManager;
 
 public class XorEncryptionTest {
 
 	@Test
 	public void testSimple() throws URISyntaxException, IOException {
 		byte data [] = {97,98,99,100};
-		XOREncryption c = new XOREncryption();
+		EncryptionDecryptionManager man = new AlgoritemManaging();
+		XOREncryption c = new XOREncryption(man);
 		byte [] keys = {50};
 		byte[] encData = c.Encrypt(keys,data);
 		assert encData [0] == (byte)(97^50);
