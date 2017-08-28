@@ -1,5 +1,7 @@
 package Managing;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,8 +48,6 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	private long time;
 	private InputOutputManager reader;
 	
-	//public static final AlgoritemManaging instance = new AlgoritemManaging();
-	
 	public AlgoritemManaging(){
 		choosenMethod=0;
 		AlgoritemOptions = new HashMap<Integer, String>();
@@ -87,26 +87,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	private byte[] loadData (Path filePath){
 		return reader.readFile(filePath);
 	}
-	
-	private void saveData (Path filePath, byte[] data){
-		String savePath = filePath.toString();
-		switch (this.mode){
-		case ENCRYPTION:
-			savePath = savePath.concat(".encrypted");
-			break;
-		case DECRYPTION:
-			String [] extention = savePath.split("\\.");
-			if(extention.length >=3){
-				savePath = savePath.concat("_decd."+extention[extention.length-2]);
-			}
-			else{
-				savePath = savePath.concat("_decd."+extention[extention.length-1]);
-			}
-		break;
-		}
-		reader.saveFile(Paths.get(savePath), data);
-	}
-	
+
 	public void SetInputStream (InputStream is){
 		((MyReader) reader).SetInputStream(is);
 	}
@@ -258,37 +239,120 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
-		byte data [] = null;
-		byte[] keys = null;
-		int numberOfKeys = 0;
+		byte data [] = loadData(filePath);
+		byte returnedData [] = null;
 		switch (this.mode){
 		case ENCRYPTION:
-			numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
-			EncryptionType typeE = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).type();
-			keys = keyGenerate(numberOfKeys);
-			reader.write("The keys are:\n");
-			for(byte b : keys){
-				reader.write(b);
-				reader.write("\n");
-			}
-			Encryption encryptor = new EncryptionFactory().create(typeE,this);
-			data = encryptor.Encrypt(keys, loadData(filePath));
+			returnedData = executeEncryption(data);
 			break;
 		case DECRYPTION:
-			numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
-			DecryptionType typeD = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).type();
-			keys = new byte [numberOfKeys];
-			reader.write("Enter "+numberOfKeys+ " keys:\n");
-			for(int i=0; i<numberOfKeys; i++){
-				keys[i] = reader.read(1)[0];
-			}
-			Decryption decryptor = new DecryptionFactory().create(typeD,this);
-			data = decryptor.Decrypt(keys, loadData(filePath));
+			returnedData = executeDecryption(data);
 			break;
 		}
-		saveData(filePath, data);
+		saveData(returnedData, filePath);
 		endProcess();
 		choosenMethod=0;
+	}
+
+	
+	private byte [] executeEncryption(byte[] data) throws IllegalKeyException, DecryptionKeyIllegal{
+		int numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
+		EncryptionType typeE = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).type();
+		byte[] keys = keyGenerate(numberOfKeys);
+		reader.write("The keys are:\n");
+		for(byte b : keys){
+			reader.write(b);
+			reader.write("\n");
+		}
+		Encryption encryptor = new EncryptionFactory().create(typeE,this);
+		byte encryptedData [] = encryptor.Encrypt(keys, data);
+		return encryptedData;
+	}
+	
+	private byte [] executeDecryption(byte[] data) throws IllegalKeyException, DecryptionKeyIllegal{
+		int numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
+		DecryptionType typeD = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).type();
+		byte[] keys = new byte [numberOfKeys];
+		reader.write("Enter "+numberOfKeys+ " keys:\n");
+		for(int i=0; i<numberOfKeys; i++){
+			keys[i] = 0;
+			byte[] readKey = reader.read(3);
+			if(readKey[0] == 45){
+				for(int j =1; j<3;j++){
+					if(readKey[j]>=48 && readKey[j]<=57)
+						keys[i] = (byte) ((-1)*(keys[i]*10+readKey[j]-48));
+				}
+			}
+			else{
+				for(int j =0; j<3;j++){
+					if(readKey[j]>=48 && readKey[j]<=57)
+						keys[i] = (byte) ((keys[i]*10+readKey[j]-48));
+				}
+			}
+
+		}
+		Decryption decryptor = new DecryptionFactory().create(typeD,this);
+		byte decryptedData [] = decryptor.Decrypt(keys, data);
+		return decryptedData;
+	}
+	
+	@Override
+	public void saveData(byte[] data, Path filePath) throws IOException {
+		switch(inputMod)
+		{
+			case File:
+				SingleFileSave(data,filePath);
+				break;
+			case Folder:
+				FolderFileSave(data,filePath);
+				break;
+			default:
+					break;
+		}
+				
+		
+	}
+
+	private void FolderFileSave(byte[] data, Path filePath) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void SingleFileSave(byte[] data, Path filePath) throws IOException {
+		switch(mode){
+		case ENCRYPTION:
+			saveEncryptFile(data,filePath);
+			break;
+		case DECRYPTION:
+			saveDecryptFile(data,filePath);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void saveDecryptFile(byte[] data, Path filePath) throws IOException {
+		String savePath = filePath.toString();
+		String [] extention = savePath.split("\\.");
+		if(extention.length >=3){
+			savePath = savePath.concat("_decd."+extention[extention.length-2]);
+		}
+		else{
+			savePath = savePath.concat("_decd."+extention[extention.length-1]);
+		}
+		FileOutputStream out = new FileOutputStream(savePath.toString());
+		out.write(data);
+		out.close();
+		
+	}
+
+	private void saveEncryptFile(byte[] data, Path filePath) throws IOException {
+		String savePath = filePath.toString();
+		savePath = savePath.concat(".encrypted");
+		FileOutputStream out = new FileOutputStream(savePath.toString());
+		out.write(data);
+		out.close();
+		
 	}
 
 }

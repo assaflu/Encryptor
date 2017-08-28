@@ -25,4 +25,6 @@ public interface EncryptionDecryptionManager {
 	public ArrayList<DecryptionType> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems);
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal;
+	
+	public void saveData(byte[] data, Path filePath) throws IOException;
 }
