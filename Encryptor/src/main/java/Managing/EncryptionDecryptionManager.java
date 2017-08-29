@@ -20,6 +20,8 @@ public interface EncryptionDecryptionManager {
 	
 	public int getChosenMethod();
 	
+	public void SetParallel(boolean isParallel);
+	
 	public ArrayList<EncryptionType> chooseBasicEncryptionAlgoritem(int numberOfAlgoritems);
 	
 	public ArrayList<DecryptionType> chooseBasicDecryptionAlgoritem (int numberOfAlgoritems);

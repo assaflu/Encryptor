@@ -84,6 +84,38 @@ public class MainClass
 			case "2":
 				System.out.println("You choose Folder");
 				manager.SetInputMode(InputMod.Folder);
+				SyncAsync(reader, manager);
+				flag=false;
+				break;
+			default:
+				System.out.println("Worng input try again\n");
+				break;
+			}
+            
+    	}
+    }
+    
+    public static void SyncAsync(Scanner reader, EncryptionDecryptionManager manager){
+       	boolean flag = true;
+    	String userInput;
+    	while(flag){
+            System.out.println("work sync or async:");
+            System.out.println("1.\tSync");
+            System.out.println("2.\tAsync");
+            userInput = reader.nextLine();
+            if(userInput.length() != 1 ){
+            	System.out.println("You should enter a number 1 for Sync and 2 for Async\n");
+            	continue;
+            }
+            switch (userInput) {
+			case "1":
+				System.out.println("You choose Sync");
+				manager.SetParallel(false);
+				flag = false;
+				break;
+			case "2":
+				System.out.println("You choose Async");
+				manager.SetParallel(true);
 				flag=false;
 				break;
 			default:
