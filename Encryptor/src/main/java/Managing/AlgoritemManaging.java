@@ -1,10 +1,13 @@
 package Managing;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryIteratorException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -14,6 +17,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.naming.spi.DirectoryManager;
 
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -239,41 +248,108 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 	
 	public void executeMethod(Path filePath) throws InstantiationException, IOException, IllegalKeyException, IllegalAccessException, DecryptionKeyIllegal{
 		startProcess();
-		byte data [] = loadData(filePath);
-		byte returnedData [] = null;
 		switch (this.mode){
 		case ENCRYPTION:
-			returnedData = executeEncryption(data);
+			executeEncryption(filePath);
 			break;
 		case DECRYPTION:
-			returnedData = executeDecryption(data);
+			executeDecryption(filePath);
 			break;
 		}
-		saveData(returnedData, filePath);
 		endProcess();
 		choosenMethod=0;
 	}
 
 	
-	private byte [] executeEncryption(byte[] data) throws IllegalKeyException, DecryptionKeyIllegal{
+	private void executeEncryption(Path filePath) throws IllegalKeyException, DecryptionKeyIllegal, IOException{
 		int numberOfKeys = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).numberOfKeys();
-		EncryptionType typeE = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).type();
+		EncryptionType type = encryptionMethods.get(choosenMethod).getDeclaredAnnotation(EncryptionClass.class).type();
+		Encryption encryptor = new EncryptionFactory().create(type,this);
 		byte[] keys = keyGenerate(numberOfKeys);
 		reader.write("The keys are:\n");
 		for(byte b : keys){
 			reader.write(b);
 			reader.write("\n");
+		}		
+		switch (inputMod){
+		case File:
+			executeSingleEncryption(filePath,keys,type,encryptor);
+			break;
+		case Folder:
+			executeMultipalEncryption(filePath,keys,type,encryptor);	
 		}
-		Encryption encryptor = new EncryptionFactory().create(typeE,this);
-		byte encryptedData [] = encryptor.Encrypt(keys, data);
-		return encryptedData;
 	}
 	
-	private byte [] executeDecryption(byte[] data) throws IllegalKeyException, DecryptionKeyIllegal{
+	private void executeMultipalEncryption(final Path filePath, final byte[] keys, EncryptionType type, final Encryption encryptor) {
+		final Path newDir = createNewDyrectory(filePath);
+		File origenDirectory = filePath.toFile();
+		ExecutorService pool = Executors.newCachedThreadPool();
+		FileFilter filter = new FileFilter() {
+			
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.isFile();
+			}};
+		
+		for(File entry: origenDirectory.listFiles(filter)){
+			final Path entryPath = entry.toPath();
+			Callable<Integer> t = new Callable<Integer>() {
+				@Override
+				public Integer call() throws Exception {
+					byte data[] = loadData(entryPath);
+					byte encryptedData [] = encryptor.Encrypt(keys, data);
+					saveMultipalEncryptionFiles(encryptedData,newDir,entryPath);
+					return 1;
+				}
+			};
+			
+			pool.submit(t);
+		}
+		pool.shutdown();
+		try {
+			pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private Path createNewDyrectory(Path filePath) {
+		File dumy = new File(filePath.toString().concat("\\encrypted"));
+		if(dumy.mkdir()) return dumy.toPath();
+		return null; //TODO: throw here an exception 
+		
+	}
+
+	private void executeSingleEncryption(Path filePath, byte[] keys,EncryptionType type, Encryption encryptor) throws IllegalKeyException, DecryptionKeyIllegal, IOException{
+		byte data[] = loadData(filePath);
+		byte encryptedData [] = encryptor.Encrypt(keys, data);
+		saveSingleEncryptFile(encryptedData, filePath);
+	}
+		
+	private void executeDecryption(Path filePath) throws IllegalKeyException, DecryptionKeyIllegal, IOException{
+		switch (inputMod){
+		case File:
+			executeSingleDecryption(filePath);
+			break;
+		case Folder:
+			executeMultipaleDecryption();	
+		}
+	}
+	
+	private void executeSingleDecryption(Path filePath) throws IllegalKeyException, DecryptionKeyIllegal, IOException{
 		int numberOfKeys = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).numberOfKeys();
 		DecryptionType typeD = decryptionMethods.get(choosenMethod).getDeclaredAnnotation(DecryptionClass.class).type();
-		byte[] keys = new byte [numberOfKeys];
+		byte[] keys = generateKeys(numberOfKeys);
 		reader.write("Enter "+numberOfKeys+ " keys:\n");
+		Decryption decryptor = new DecryptionFactory().create(typeD,this);
+		byte data [] = loadData(filePath);
+		byte decryptedData [] = decryptor.Decrypt(keys, data);
+		saveSingleDecryptFile(decryptedData, filePath);
+	}
+	
+	private byte [] generateKeys(int numberOfKeys){
+		byte[] keys = new byte [numberOfKeys];
 		for(int i=0; i<numberOfKeys; i++){
 			keys[i] = 0;
 			byte[] readKey = reader.read(3);
@@ -289,49 +365,27 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 						keys[i] = (byte) ((keys[i]*10+readKey[j]-48));
 				}
 			}
-
 		}
-		Decryption decryptor = new DecryptionFactory().create(typeD,this);
-		byte decryptedData [] = decryptor.Decrypt(keys, data);
-		return decryptedData;
+		return keys;
 	}
 	
-	@Override
-	public void saveData(byte[] data, Path filePath) throws IOException {
-		switch(inputMod)
-		{
-			case File:
-				SingleFileSave(data,filePath);
-				break;
-			case Folder:
-				FolderFileSave(data,filePath);
-				break;
-			default:
-					break;
-		}
-				
+	private void executeMultipaleDecryption(){
 		
 	}
+	
+	private void saveMultipalEncryptionFiles(byte[] encryptedData, Path newDir, Path entryPath) throws IOException {
+		String Spath = newDir.toString();
+		Spath = Spath.concat("\\"+entryPath.getFileName().toString());
+		FileOutputStream out = new FileOutputStream(Spath);
+		out.write(encryptedData);
+		out.close();
+	}
 
-	private void FolderFileSave(byte[] data, Path filePath) {
-		// TODO Auto-generated method stub
+	private void saveMultipalDecryptionFiles(){
 		
 	}
-
-	private void SingleFileSave(byte[] data, Path filePath) throws IOException {
-		switch(mode){
-		case ENCRYPTION:
-			saveEncryptFile(data,filePath);
-			break;
-		case DECRYPTION:
-			saveDecryptFile(data,filePath);
-			break;
-		default:
-			break;
-		}
-	}
-
-	private void saveDecryptFile(byte[] data, Path filePath) throws IOException {
+	
+	private void saveSingleDecryptFile(byte[] data, Path filePath) throws IOException {
 		String savePath = filePath.toString();
 		String [] extention = savePath.split("\\.");
 		if(extention.length >=3){
@@ -346,7 +400,7 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		
 	}
 
-	private void saveEncryptFile(byte[] data, Path filePath) throws IOException {
+	private void saveSingleEncryptFile(byte[] data, Path filePath) throws IOException {
 		String savePath = filePath.toString();
 		savePath = savePath.concat(".encrypted");
 		FileOutputStream out = new FileOutputStream(savePath.toString());
@@ -354,5 +408,4 @@ public class AlgoritemManaging implements EncryptionDecryptionManager {
 		out.close();
 		
 	}
-
 }

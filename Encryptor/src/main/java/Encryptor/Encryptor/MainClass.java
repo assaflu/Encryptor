@@ -32,13 +32,13 @@ public class MainClass
     	System.out.println("enter file path: ");
     	userInput = reader.nextLine();
     	File inputFile = new File(userInput);
-    	flag = inputFile.exists() && inputFile.isFile();
+    	/*flag = inputFile.exists() && inputFile.isFile();
     	while(!flag){
     		System.out.println("the path either not leads to a file or not exists.\nenter new path:");
     		userInput = reader.nextLine();
     		inputFile = new File(userInput);
     		flag = inputFile.exists() && inputFile.isFile();
-    	} 	
+    	} 	*/
         //userInput = "C:\Users\assaflu\Desktop\LocationManagerNotSpart.txt";
         //C:\Users\assaflu\Desktop\ReviewManagerNotSpart.txt
         try {
