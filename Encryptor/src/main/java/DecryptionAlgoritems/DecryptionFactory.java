@@ -1,6 +1,5 @@
 package DecryptionAlgoritems;
 
-import DecryptionTests.XorDecryptionTest;
 import Managing.EncryptionDecryptionManager;
 
 public class DecryptionFactory {
